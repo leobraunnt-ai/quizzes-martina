@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Missão Planeta Limpo — Quiz de Geografia</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Trebuchet MS",Verdana,system-ui,sans-serif;background:linear-gradient(160deg,#3fb56b,#2a9d8f 50%,#1d6fa3);min-height:100vh;color:#2b2b3a;font-size:18px}
+.wrap{max-width:560px;margin:0 auto;padding:18px 14px 30px}
+.box{background:#fff;border-radius:22px;padding:22px 18px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.hidden{display:none}
+#start{text-align:center;color:#fff;padding-top:30px}
+#start .emo{font-size:64px}
+#start h1{font-size:40px;letter-spacing:1px;margin:8px 0 4px;text-shadow:0 3px 0 rgba(0,0,0,.2)}
+#start .sub{font-size:20px;font-weight:bold;opacity:.95}
+#start .frase{margin:14px 0 26px;font-size:19px}
+#start .info{background:rgba(255,255,255,.18);border-radius:16px;padding:12px;margin-bottom:24px;font-size:17px}
+.btn{display:block;width:100%;min-height:56px;border:none;border-radius:16px;font-size:21px;font-weight:bold;cursor:pointer;font-family:inherit}
+.go{background:#ffd23f;color:#5a3d00;box-shadow:0 5px 0 #c99a00}
+.go:active{transform:translateY(3px);box-shadow:0 2px 0 #c99a00}
+.bar{height:14px;background:rgba(255,255,255,.35);border-radius:10px;overflow:hidden;margin:6px 0 14px}
+.bar div{height:100%;background:#ffd23f;width:0;transition:width .3s}
+.count{color:#fff;font-weight:bold;display:flex;justify-content:space-between}
+.q{font-size:21px;font-weight:bold;margin-bottom:16px;line-height:1.3}
+.opt{display:block;width:100%;min-height:56px;text-align:left;padding:12px 14px;margin-bottom:10px;border:3px solid #dfe6ee;background:#f7fafc;border-radius:14px;font-size:18px;font-family:inherit;cursor:pointer;color:#2b2b3a}
+.opt:hover:not([disabled]){border-color:#2a9d8f}
+.opt.ok{background:#d8f5df;border-color:#2e9e44}
+.opt.bad{background:#ffe4d6;border-color:#f57c00}
+.fb{border-radius:14px;padding:12px 14px;margin:6px 0 14px;font-size:17px;line-height:1.35}
+.fb.ok{background:#e9fbe9;color:#1b6b2c}
+.fb.bad{background:#fff3e6;color:#8a4b00}
+.next{background:#2a9d8f;color:#fff;box-shadow:0 5px 0 #1c6e64}
+#end{text-align:center}
+#end .stars{font-size:52px;margin:6px 0}
+#end h2{font-size:28px;color:#1d6fa3}
+#end .score{font-size:22px;margin:8px 0 18px;font-weight:bold}
+#end .btn{margin-bottom:12px}
+.rev{background:#ff6b4a;color:#fff;box-shadow:0 5px 0 #c4472b}
+.review-tag{display:inline-block;background:#ff6b4a;color:#fff;border-radius:20px;padding:2px 10px;font-size:14px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="start">
+    <div class="emo">♻️🌎</div>
+    <h1>MISSÃO<br>PLANETA LIMPO</h1>
+    <div class="sub">Quiz de Geografia • 3º ano</div>
+    <p class="frase">Aprender é uma aventura! 🔎</p>
+    <div class="info">🛒 Consumo e consumismo • 🗑️ Lixo e reciclagem<br>🎨 Cores das lixeiras • 🚛 Lixões e aterros</div>
+    <button class="btn go" id="btnStart">Começar 🚀</button>
+  </div>
+
+  <div id="game" class="hidden">
+    <div class="count"><span id="cnt"></span><span id="pts"></span></div>
+    <div class="bar"><div id="prog"></div></div>
+    <div class="box">
+      <div id="tag"></div>
+      <div class="q" id="q"></div>
+      <div id="opts"></div>
+      <div id="fb"></div>
+      <button class="btn next hidden" id="btnNext">Próxima ➜</button>
+    </div>
+  </div>
+
+  <div id="end" class="hidden box">
+    <div class="stars" id="stars"></div>
+    <h2 id="msg"></h2>
+    <div class="score" id="score"></div>
+    <button class="btn go" id="btnAgain">Jogar de novo 🔁</button>
+    <button class="btn rev" id="btnReview">Revisar as que errei 📚</button>
+  </div>
+
+</div>
+<script>
+const Q=[
+ {q:"O que é consumo?",a:["É adquirir produtos ou serviços por meio da compra","É jogar fora o que não usamos mais","É separar o lixo em casa","É transformar restos de comida em adubo"],e:"Consumo é o ato de adquirir produtos ou serviços por meio da compra."},
+ {q:"Complete a frase: No consumo, o ato de comprar está ligado à…",a:["necessidade","moda","propaganda","vontade de ter sempre coisas novas"],e:"No consumo, comprar está ligado à necessidade. No consumismo, compramos coisas supérfluas."},
+ {q:"O que são produtos supérfluos?",a:["Coisas desnecessárias, que têm pouca importância","Água e alimentos","Coisas que podem ser recicladas","Restos de alimentos"],e:"Supérfluos são coisas desnecessárias, que têm pouca importância."},
+ {q:"O que é consumismo?",a:["Consumo excessivo: comprar de forma exagerada e desnecessária","Comprar só o que é necessário","Separar os resíduos para a reciclagem","O trabalho dos catadores"],e:"Consumismo é o consumo excessivo, a compra exagerada e desnecessária."},
+ {q:"Pessoas consumistas contribuem para…",a:["o desperdício de recursos naturais e uma enorme quantidade de lixo","diminuir o lixo das cidades","aumentar a reciclagem","limpar os rios"],e:"Os consumistas ajudam a desperdiçar recursos naturais e a produzir uma enorme quantidade de lixo."},
+ {q:"Na HQ do menino que pedia \"Papai, você pode comprar?\", qual meio de comunicação estava influenciando ele?",a:["A televisão","Os jornais impressos","O rádio","As revistas"],e:"Era a televisão. No fim, o pai percebe a influência das propagandas e desliga a TV."},
+ {q:"Qual destes é um RESÍDUO?",a:["Um material descartado que pode ser reaproveitado ou reciclado","Um objeto que não tem serventia para ninguém","Um material sem condições de ser reciclado","Um líquido escuro que sai do lixo"],e:"Resíduo é o material que pode ser reaproveitado e reciclado."},
+ {q:"O que é um REJEITO?",a:["Um resíduo sem condições de ser reaproveitado ou reciclado","Um material que pode virar adubo","Uma garrafa plástica","Um papelão limpo"],e:"Rejeito é o resíduo sem condições de ser reaproveitado ou reciclado."},
+ {q:"Que posição o Brasil ocupa entre os países que mais produzem lixo no mundo?",a:["3º lugar","1º lugar","6º lugar","10º lugar"],e:"O Brasil está em 3º lugar, atrás dos Estados Unidos e da China."},
+ {q:"Quantos quilos de lixo um brasileiro produz por dia?",a:["1,03 kg","2,58 kg","10 kg","0,34 kg"],e:"Cada brasileiro produz 1,03 kg de lixo por dia."},
+ {q:"Qual destes é um REJEITO?",a:["Papel higiênico, cotonetes e fraldas","Garrafa plástica","Lata de alumínio","Folhas secas"],e:"Materiais de banheiro (papel higiênico, cotonetes e fraldas) e materiais de limpeza são rejeitos."},
+ {q:"Qual destes é um resíduo ORGÂNICO?",a:["Restos de alimentos e galhos de árvores","Embalagem de leite (tetrapak)","Pote de vidro","Fralda usada"],e:"Orgânicos são restos de alimentos e materiais de jardim, como folhas secas e galhos."},
+ {q:"Para onde vão os resíduos recicláveis secos depois da coleta?",a:["Para os centros de triagem, e depois são vendidos para indústrias de reciclagem","Direto para o lixão","Para a compostagem","Para os bueiros"],e:"Os recicláveis secos vão para centros de triagem, são separados e vendidos para indústrias de reciclagem."},
+ {q:"O que acontece com os resíduos orgânicos?",a:["Viram adubo pela compostagem","Vão para o centro de triagem","São vendidos para a indústria","Viram plástico novo"],e:"Os orgânicos viram adubo pela compostagem."},
+ {q:"A coleta seletiva é obrigação de quem?",a:["Dos municípios","Só das escolas","Dos catadores","Das indústrias"],e:"A coleta seletiva é obrigação dos municípios."},
+ {q:"Quantos catadores de materiais recicláveis existem no Brasil?",a:["Mais de 400 mil","Cerca de 400","4.183","Mais de 2 bilhões"],e:"No Brasil existem mais de 400 mil catadores de materiais recicláveis."},
+ {q:"Em 2021, quantos municípios brasileiros tinham coleta seletiva?",a:["4.183","1.387","5.570","400"],e:"4.183 municípios tinham coleta seletiva e 1.387 não tinham."},
+ {q:"Qual par lixeira → cor está CERTO?",a:["Plástico → vermelho","Papel → verde","Vidro → amarelo","Orgânico → azul"],e:"Papel é azul, plástico é vermelho, vidro é verde, metal é amarelo e orgânico é marrom."},
+ {q:"O que é o chorume?",a:["Um líquido poluente, de cor escura, que sai da decomposição dos resíduos","Um gás que deixa o ar limpo","Um tipo de adubo","A água da chuva"],e:"Chorume é um líquido poluente, de cor escura, resultado da decomposição dos resíduos."},
+ {q:"Onde o chorume contamina o solo e as águas?",a:["No lixão a céu aberto","No aterro sanitário","No centro de triagem","Na lixeira azul"],e:"No lixão não há controle: o chorume penetra no solo e chega às águas. No aterro sanitário, mantas de plástico e argila protegem o solo."}
+];
+const OK=["Isso aí! 🎉","Mandou bem! 🌟","Acertou! 👏","Muito bem! ♻️","Show de bola! 💚","Você é fera! 🦁"];
+const BAD=["Quase! Vamos aprender 💡","Tudo bem, errar faz parte! 🌱","Boa tentativa! 👀"];
+const $=id=>document.getElementById(id);
+let list=[],i=0,pts=0,wrong=[],mode="full";
+const shuf=a=>{a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a};
+function start(qs,m){mode=m;list=shuf(qs);i=0;pts=0;wrong=[];$("start").classList.add("hidden");$("end").classList.add("hidden");$("game").classList.remove("hidden");show()}
+function show(){const it=list[i];$("cnt").textContent=`Pergunta ${i+1} de ${list.length}`;$("pts").textContent=`⭐ ${pts}`;$("prog").style.width=(i/list.length*100)+"%";
+ $("tag").innerHTML=mode==="review"?'<span class="review-tag">Revisão</span>':"";$("q").textContent=it.q;$("fb").innerHTML="";$("btnNext").classList.add("hidden");
+ const o=$("opts");o.innerHTML="";shuf(it.a.map((t,k)=>({t,c:k===0}))).forEach(x=>{const b=document.createElement("button");b.className="opt";b.textContent=x.t;b.dataset.c=x.c?1:0;b.onclick=()=>pick(b,x.c);o.appendChild(b)})}
+function pick(b,c){const it=list[i];document.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(x.dataset.c==="1")x.classList.add("ok")});
+ if(c){pts++;$("fb").innerHTML=`<div class="fb ok"><b>${OK[Math.floor(Math.random()*OK.length)]}</b><br>${it.e}</div>`}
+ else{b.classList.add("bad");wrong.push(it);$("fb").innerHTML=`<div class="fb bad"><b>${BAD[Math.floor(Math.random()*BAD.length)]}</b><br>A resposta certa é: <b>${it.a[0]}</b>.<br>${it.e}</div>`}
+ $("pts").textContent=`⭐ ${pts}`;$("btnNext").textContent=i===list.length-1?"Ver resultado 🏁":"Próxima ➜";$("btnNext").classList.remove("hidden")}
+function next(){i++;if(i<list.length)show();else end()}
+function end(){$("game").classList.add("hidden");$("end").classList.remove("hidden");const p=pts/list.length;const s=p>=.9?3:p>=.6?2:1;
+ $("stars").textContent="⭐".repeat(s)+"☆".repeat(3-s);$("msg").textContent=s===3?"Missão cumprida, Martina! 🏆":s===2?"Muito bem, Martina! 🌟":"Continue tentando, Martina! 💪";
+ $("score").textContent=`Você acertou ${pts} de ${list.length}`;$("btnReview").classList.toggle("hidden",wrong.length===0);window.__last={pts,total:list.length,wrong:wrong.length}}
+$("btnStart").onclick=()=>start(Q,"full");$("btnNext").onclick=next;$("btnAgain").onclick=()=>start(Q,"full");$("btnReview").onclick=()=>start(wrong.slice(),"review");
+</script>
+</body>
+</html>
