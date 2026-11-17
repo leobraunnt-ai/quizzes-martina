@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Missão Boa Convivência — Quiz de Filosofia</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Nunito","Trebuchet MS",system-ui,sans-serif;font-size:18px;background:linear-gradient(160deg,#ffe1ec,#fff4d6 55%,#e3f0ff);min-height:100vh;color:#2b2b3a}
+.wrap{max-width:560px;margin:0 auto;padding:18px 16px 40px}
+.tela{display:none}.tela.on{display:block}
+.card{background:#fff;border-radius:24px;padding:22px 18px;box-shadow:0 6px 0 rgba(0,0,0,.08)}
+h1{font-size:30px;margin:6px 0;color:#c4265e;text-align:center}
+.sub{text-align:center;color:#7b4fd6;font-weight:800;margin:0 0 14px}
+.emo{font-size:64px;text-align:center}
+.btn{display:block;width:100%;min-height:56px;border:0;border-radius:18px;font-size:20px;font-weight:800;color:#fff;background:#7b4fd6;margin-top:12px;cursor:pointer;box-shadow:0 4px 0 #5a35a8}
+.btn.sec{background:#f97316;box-shadow:0 4px 0 #c2550a}
+.prog{font-weight:800;color:#7b4fd6;margin-bottom:6px}
+.barra{height:14px;background:#eee;border-radius:10px;overflow:hidden;margin-bottom:14px}
+.barra i{display:block;height:100%;background:linear-gradient(90deg,#22a66b,#3b82f6);width:0;transition:width .3s}
+.perg{font-size:21px;font-weight:800;margin:4px 0 14px;line-height:1.35}
+.alt{display:block;width:100%;min-height:56px;text-align:left;padding:12px 16px;margin:10px 0;border-radius:16px;border:3px solid #d9d2f5;background:#faf8ff;font-size:18px;font-family:inherit;color:#2b2b3a;cursor:pointer}
+.alt.certa{background:#dff7ea;border-color:#22a66b}
+.alt.errada{background:#ffe6dc;border-color:#f97316}
+.alt:disabled{cursor:default}
+.fb{border-radius:16px;padding:12px 14px;margin-top:8px;font-size:17px;display:none}
+.fb.ok{background:#e7f8ef;border:2px solid #22a66b;display:block}
+.fb.no{background:#fff0e3;border:2px solid #f97316;display:block}
+.estrelas{font-size:48px;text-align:center;margin:8px 0}
+.placar{font-size:26px;font-weight:900;text-align:center;color:#c4265e}
+.rev{background:#fff7e0;border-radius:14px;padding:10px 12px;margin:8px 0;font-size:16px}
+</style></head><body><div class="wrap">
+
+<div id="inicio" class="tela on"><div class="card">
+ <div class="emo">🤝🚧</div>
+ <h1>Missão Boa Convivência</h1>
+ <p class="sub">Quiz de Filosofia • 3º ano</p>
+ <p style="text-align:center">Limites, certo e errado e a festa do Equinócio. Aprender é uma aventura! 🔎</p>
+ <button class="btn" id="comecar">Começar 🚀</button>
+</div></div>
+
+<div id="jogo" class="tela"><div class="card">
+ <div class="prog" id="prog"></div><div class="barra"><i id="bar"></i></div>
+ <div class="perg" id="perg"></div><div id="alts"></div>
+ <div class="fb" id="fb"></div>
+ <button class="btn" id="prox" style="display:none">Próxima ➜</button>
+</div></div>
+
+<div id="fim" class="tela"><div class="card">
+ <div class="emo">🏆</div>
+ <div class="placar" id="placar"></div>
+ <div class="estrelas" id="estrelas"></div>
+ <p id="msg" style="text-align:center;font-weight:700"></p>
+ <button class="btn" id="denovo">Jogar de novo 🔁</button>
+ <button class="btn sec" id="revisar">Revisar as que errei 📖</button>
+ <div id="revisao"></div>
+</div></div>
+
+</div>
+<script>
+const PERGUNTAS = [
+{p:"Na história \"A Profecia\", o que aconteceu com o Horácio e o Tomás?",c:"Um irritou o outro e os dois se descontrolaram",e:["Os dois foram brincar juntos no recreio","Os dois ganharam um prêmio da escola","Os dois ajudaram a Fernanda"],x:"O Horácio irritou o Tomás e vice-versa, e os dois se descontrolaram.",i:["81:0"]},
+{p:"A Fernanda não sabia o que fazer. Qual era a única coisa que ela sabia?",c:"Que agir de maneira agressiva só iria piorar",e:["Que gritar resolveria tudo","Que era melhor empurrar os dois","Que a briga já tinha acabado"],x:"Agir de maneira agressiva só iria piorar ainda mais o que tinha começado na semana anterior.",i:["81:2"]},
+{p:"Na história \"O Equinócio\", qual destes apelidos o Horácio deu para a Fê?",c:"Pernuda",e:["Princesa","Estrelinha","Campeã"],x:"O Horácio disse que a Fê é chata e a chamou de pernuda, garça, fedida e descabelada. Antes, chamava de fedegosa.",i:["95:1"]},
+{p:"Por que Tomás e Horácio foram levados à direção?",c:"Porque ultrapassaram os limites da boa convivência",e:["Porque tiraram nota boa","Porque chegaram atrasados","Porque esqueceram o caderno"],x:"Eles se desentenderam e ultrapassaram os limites da boa convivência.",i:["85:0"]},
+{p:"Para evitar situações como a de Tomás e Horácio, o que é importante conhecer?",c:"Os nossos limites e os limites das outras pessoas",e:["Só os nossos limites","Só as regras do jogo","Os nomes de todos da escola"],x:"É importante conhecer os nossos limites e os limites das outras pessoas.",i:["85:1"]},
+{p:"Complete: nossos limites são o que toleramos, o que permitimos que os outros façam com a gente e…",c:"do que gostamos e do que não gostamos",e:["quantos amigos nós temos","o tamanho da nossa sala","a hora de ir dormir"],x:"Limites são o que toleramos, permitimos que os outros façam com a gente, do que gostamos e não gostamos.",i:["85:2"]},
+{p:"Qual é o objetivo do jogo \"Cuidado com o limite\"?",c:"Marcar mais pontos e não ultrapassar o limite do tabuleiro",e:["Chegar primeiro ao fim da pista","Jogar o objeto o mais longe possível","Perder todos os pontos"],x:"O objetivo é marcar mais pontos e não ultrapassar o limite do tabuleiro.",i:["85:3","86:0"]},
+{p:"Quantas tentativas cada jogador tem no jogo?",c:"Cinco",e:["Duas","Dez","Uma"],x:"Todos têm cinco tentativas, e a pontuação é a soma dos cinco lances.",i:["86:3"]},
+{p:"No exemplo do livro, o Jogador A fez 40 pontos. O Jogador B fez 20, 15, 20, perdeu tudo e depois ganhou 10. Quem ganhou?",c:"O Jogador A, porque fez mais pontos",e:["O Jogador B, porque fez 20 pontos","Deu empate","Ninguém ganhou"],x:"O Jogador B perdeu tudo e terminou com 10 pontos. Vence quem tiver mais pontos: o Jogador A, com 40.",i:["86:5","86:6","86:7"]},
+{p:"No tabuleiro, o que acontece se o objeto cair na área \"Limite\"?",c:"Perde metade dos pontos",e:["Ganha 20 pontos","Ganha 5 pontos","Ganha o jogo"],x:"Limite: perde metade dos pontos. E se passou do limite, perdeu tudo!",i:["87:0"]},
+{p:"Na história \"A Tabela\", o que aconteceu com a Fê?",c:"Ao brincar com a Fúlvia, deixou ela chateada e foi parar na diretoria",e:["Ganhou um presente da Fúlvia","Foi escolhida para cantar na festa","Ganhou o jogo do tabuleiro"],x:"A Fê estava confusa, deixou a Fúlvia chateada e foi parar na diretoria.",i:["88:0"]},
+{p:"Para que serviria a tabela de certos ou errados da Fê?",c:"Para ela não errar mais com seus amigos",e:["Para contar os pontos do jogo","Para anotar a lição de Matemática","Para fazer um desenho"],x:"Uma tabela de certos ou errados seria ideal para que ela não errasse mais com seus amigos.",i:["88:1"]},
+{p:"Na atividade 24, que pergunta você faz para o entrevistado?",c:"Como você sabe se uma atitude é certa ou errada?",e:["Qual é a sua cor favorita?","Quantos anos você tem?","Qual é o seu animal preferido?"],x:"A pergunta da entrevista é: como você sabe se uma atitude é certa ou errada?",i:["89:0","90:0"]},
+{p:"Na sua tabela de certo e errado, qual atitude vai na coluna ERRADO?",c:"Agir de maneira agressiva",e:["Respeitar os limites dos outros","Cumprir o combinado","Conhecer os meus limites"],x:"Agir de maneira agressiva é ERRADO: só piora as coisas.",i:["91:0"]},
+{p:"Por que o Horácio chamava o Hélio de \"heliocóptero\"?",c:"Porque ele tem orelhas grandes que balançam quando tropeça",e:["Porque ele gosta de helicópteros","Porque ele corre muito rápido","Porque ele mora perto do aeroporto"],x:"Era só porque o Hélio tem orelhas grandes que balançam quando ele tropeça.",i:["95:1","95:2"]},
+{p:"O Horácio não gostava da Fê. O que a Tia Val ensinou para ela?",c:"É normal não gostar de alguém e é normal alguém não gostar da gente",e:["Todo mundo tem que gostar de todo mundo","Quem não gosta da gente está sempre errado","É preciso brigar com quem não gosta da gente"],x:"Sempre tem quem gosta e quem não gosta da gente. É normal!",i:["94:0","95:0"]},
+{p:"O que é o equinócio?",c:"O dia que marca o começo da primavera, quando o dia e a noite duram o mesmo tempo",e:["O dia mais frio do inverno","O nome da festa de aniversário da Fê","O dia em que a noite dura o dia inteiro"],x:"No equinócio, o Sol cruza no céu a linha do Equador e o dia e a noite duram exatamente o mesmo tempo.",i:["96:0"]},
+{p:"Na festa do equinócio, por que o rato não gostava da cobra?",c:"Porque ela devorou uma tia dele",e:["Porque ela era exibida","Porque ela era gulosa","Porque ela vive na água e na terra"],x:"O rato não gostava da cobra porque ela devorou uma tia dele.",i:["98:0"]},
+{p:"Quando a festa acabou, por que todos agradeceram ao leão?",c:"Porque ele cumpriu o combinado e não comeu nenhum convidado",e:["Porque ele fez toda a comida","Porque ele levou todos para casa","Porque ele ganhou a competição"],x:"O leão cumpriu o combinado e não se alimentou de nenhum convidado da festa.",i:["98:3"]},
+{p:"Na festa, por que a graúna não gostava do sapo?",c:"Porque achava que bichos que vivem na água e na terra ao mesmo tempo não são confiáveis",e:["Porque ele devorou uma tia dela","Porque ele era guloso","Porque ele não a levou para a festa no céu"],x:"A graúna achava que bichos que vivem na água e na terra ao mesmo tempo não são confiáveis.",i:["97:2"]}
+];
+const ELOGIOS=["Isso aí! 🎉","Mandou bem! ⭐","Acertou em cheio! 🎯","Que orgulho! 💜","Muito bem, Martina! 🙌","Perfeito! 🌟"];
+const $=id=>document.getElementById(id);
+let ordem=[],atual=0,acertos=0,erradas=[];
+function emb(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function tela(id){document.querySelectorAll('.tela').forEach(t=>t.classList.remove('on'));$(id).classList.add('on');window.scrollTo(0,0)}
+function iniciar(lista){ordem=emb(lista);atual=0;acertos=0;erradas=[];tela('jogo');mostrar()}
+function mostrar(){
+ const q=ordem[atual];
+ $('prog').textContent=`Pergunta ${atual+1} de ${ordem.length}`;
+ $('bar').style.width=(atual/ordem.length*100)+'%';
+ $('perg').textContent=q.p;$('fb').className='fb';$('fb').textContent='';$('prox').style.display='none';
+ const box=$('alts');box.innerHTML='';
+ emb([q.c,...q.e]).forEach(t=>{const b=document.createElement('button');b.className='alt';b.textContent=t;b.onclick=()=>responder(b,t,q);box.appendChild(b)});
+}
+function responder(b,t,q){
+ document.querySelectorAll('.alt').forEach(x=>{x.disabled=true;if(x.textContent===q.c)x.classList.add('certa')});
+ if(t===q.c){acertos++;$('fb').className='fb ok';$('fb').textContent=ELOGIOS[Math.floor(Math.random()*ELOGIOS.length)]+' '+q.x}
+ else{b.classList.add('errada');erradas.push(q);$('fb').className='fb no';$('fb').textContent='Quase! A resposta certa é: "'+q.c+'". '+q.x}
+ $('prox').style.display='block';$('prox').textContent=atual===ordem.length-1?'Ver resultado 🏁':'Próxima ➜';
+}
+function fim(){
+ tela('fim');$('bar').style.width='100%';
+ const pct=acertos/ordem.length;
+ $('placar').textContent=`Você acertou ${acertos} de ${ordem.length}!`;
+ $('estrelas').textContent=pct>=0.85?'⭐⭐⭐':pct>=0.6?'⭐⭐':'⭐';
+ $('msg').textContent=pct>=0.85?'Parabéns, Martina! Você é craque em boa convivência! 🎉':pct>=0.6?'Muito bom! Revise as que errou e tente de novo! 💪':'Você está aprendendo! Leia o resumo e jogue de novo. 💜';
+ $('revisar').style.display=erradas.length?'block':'none';$('revisao').innerHTML='';
+}
+$('comecar').onclick=()=>iniciar(PERGUNTAS);
+$('prox').onclick=()=>{atual++;atual<ordem.length?mostrar():fim()};
+$('denovo').onclick=()=>iniciar(PERGUNTAS);
+$('revisar').onclick=()=>{$('revisao').innerHTML=erradas.map(q=>`<div class="rev"><b>${q.p}</b><br>✅ ${q.c}<br><small>${q.x}</small></div>`).join('')};
+</script></body></html>
