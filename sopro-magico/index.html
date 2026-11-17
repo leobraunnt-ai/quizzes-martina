@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Missão Sopro Mágico — Quiz de Artes</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;background:linear-gradient(160deg,#fff3e0,#fce4ec 50%,#e3f2fd);min-height:100vh;color:#2b2d42;font-size:19px}
+.wrap{max-width:560px;margin:0 auto;padding:18px 16px 40px}
+.tela{display:none}.tela.on{display:block}
+.card{background:#fff;border-radius:24px;padding:22px 18px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+h1{font-size:34px;margin:6px 0;color:#e53935;text-align:center;line-height:1.1}
+.sub{text-align:center;color:#8e24aa;font-weight:bold;margin:0 0 10px}
+.emo{font-size:64px;text-align:center}
+.btn{display:block;width:100%;min-height:56px;border:0;border-radius:18px;font-size:21px;font-weight:bold;color:#fff;background:#fb8c00;margin-top:14px;cursor:pointer;box-shadow:0 4px 0 #c56a00}
+.btn.sec{background:#1e88e5;box-shadow:0 4px 0 #1565c0}
+.barra{height:14px;background:#eee;border-radius:10px;overflow:hidden;margin:6px 0 14px}
+.barra div{height:100%;background:linear-gradient(90deg,#fb8c00,#e53935);width:0;transition:width .3s}
+.cont{font-weight:bold;color:#8e24aa}
+.perg{font-size:22px;font-weight:bold;margin:4px 0 14px;line-height:1.3}
+.alt{display:block;width:100%;min-height:56px;text-align:left;padding:12px 16px;border-radius:16px;border:3px solid #e0e0e0;background:#fafafa;font-size:19px;margin-bottom:10px;cursor:pointer;color:#2b2d42}
+.alt.certa{border-color:#43a047;background:#e8f5e9}.alt.errada{border-color:#fb8c00;background:#fff3e0}
+.fb{border-radius:16px;padding:12px 14px;margin-top:6px;display:none}
+.fb.ok{display:block;background:#e8f5e9;color:#1b5e20}.fb.no{display:block;background:#fff3e0;color:#8d4a00}
+.estrelas{font-size:56px;text-align:center}
+.placar{font-size:30px;text-align:center;font-weight:bold;color:#e53935}
+.rev{border-left:6px solid #fb8c00;background:#fff8ef;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:17px}
+</style></head><body><div class="wrap">
+
+<div class="tela on" id="inicio"><div class="card">
+ <div class="emo">🌬️🎵</div>
+ <h1>Missão Sopro Mágico</h1>
+ <p class="sub">Quiz de Artes • 3º ano</p>
+ <p style="text-align:center">Assobios, melodias, paródias, tubos sonoros, sons agudos e graves... Prepare o fôlego! 🎺</p>
+ <p style="text-align:center;font-weight:bold;color:#1e88e5">Aprender é uma aventura! 🔎</p>
+ <button class="btn" onclick="comecar()">Começar 🚀</button>
+</div></div>
+
+<div class="tela" id="jogo"><div class="card">
+ <div class="cont" id="cont"></div>
+ <div class="barra"><div id="prog"></div></div>
+ <div class="perg" id="perg"></div>
+ <div id="alts"></div>
+ <div class="fb" id="fb"></div>
+ <button class="btn sec" id="prox" style="display:none" onclick="proxima()">Próxima ➜</button>
+</div></div>
+
+<div class="tela" id="fim"><div class="card">
+ <div class="estrelas" id="estrelas"></div>
+ <div class="placar" id="placar"></div>
+ <p style="text-align:center;font-weight:bold" id="msg"></p>
+ <button class="btn" onclick="comecar()">Jogar de novo 🔁</button>
+ <button class="btn sec" id="btnRev" onclick="revisar()">Revisar as que errei 📖</button>
+ <div id="revisao"></div>
+</div></div>
+
+</div>
+<script>
+const PERGUNTAS = [
+ {q:"Qual é um dos modos mais comuns de assobiar?", c:"Biquinho", e:["Com a boca bem aberta","Batendo palmas","Cantando bem alto"], x:"Fazer biquinho é um dos modos mais comuns de assobiar. O espaço entre os lábios fica bem pequeno: ninguém assobia de boca aberta!"},
+ {q:"Do que é feita a garraflauta e onde a gente sopra?", c:"Garrafinha de plástico, soprando no bocal", e:["Tubo de bambu, vibrando os lábios","Caule de mamão, soprando entre os polegares","Cartolina enrolada, batendo com as mãos"], x:"A garraflauta, inspirada nos Ba-Benzélé, é feita com garrafinha ou frasco de plástico vazio, e a gente sopra no bocal. Na conversa musical, você responde ao som com a voz, usando uma vogal."},
+ {q:"Complete: O som é produzido pela ______ do ar.", c:"movimentação", e:["cor","luz","temperatura"], x:"O som é produzido pela movimentação do ar. Na garraflauta, o ar se movimenta mais rápido ou mais devagar e o som muda."},
+ {q:"Como é o assobio feito com dois dedos da mão?", c:"Forte, e para muitas pessoas é mais difícil", e:["Fraquinho e muito fácil","Sem som nenhum","Igual ao som de um tambor"], x:"Com dois dedos sai um assobio forte, e muita gente acha esse jeito mais difícil."},
+ {q:"Na \"flauta de mão\", onde a gente sopra?", c:"Entre os polegares", e:["Dentro de uma garrafa","Na palma da mão fechada","Entre os pés"], x:"Juntamos as mãos e sopramos entre os polegares, abrindo os dedos para o ar sair. O som lembra a ocarina."},
+ {q:"Sobre a ocarina, qual frase está CERTA?", c:"É da família das flautas e é um dos instrumentos mais antigos do mundo", e:["É da família dos tambores","Só pode ser feita de plástico","Foi inventada na Austrália pelos aborígenes"], x:"A ocarina é da família das flautas e é um dos instrumentos mais antigos do mundo. Pode ser de madeira, porcelana, argila ou pedra."},
+ {q:"Quem aperfeiçoou a ocarina e deu esse nome a ela?", c:"O italiano Giuseppe Donati", e:["Milton Nascimento","Fernando Brandt","O povo Yawalapiti"], x:"Foi o italiano Giuseppe Donati. O formato lembra a cabeça da ave \"Oche\"."},
+ {q:"Quem compôs a música \"Bola de meia, bola de gude\", que tem um assobio no início?", c:"Milton Nascimento e Fernando Brandt", e:["Giuseppe Donati","Os aborígenes da Austrália","O povo Ba-Benzélé"], x:"A música foi composta por Milton Nascimento e Fernando Brandt. Milton também é intérprete da música brasileira e bom de assobio. O assobio se parece com a letra cantada."},
+ {q:"O que é MELODIA?", c:"Uma sequência de sons que diferencia uma música de todas as outras", e:["A letra escrita de uma música","Um instrumento feito de bambu","Um aparelho que mostra as notas"], x:"Melodia é uma sequência de sons que diferencia uma música de todas as outras. Cantando \"lá, lá, lá\", quem conhece reconhece a música mesmo sem a letra; é preciso ficar bem atento."},
+ {q:"O que é uma PARÓDIA MUSICAL?", c:"Usar a melodia de uma canção conhecida e mudar a letra de forma divertida", e:["Tocar uma música só com assobio","Cantar a música bem baixinho","Inventar uma melodia nova com a mesma letra"], x:"Paródia musical é manter a melodia de uma canção conhecida e mudar a letra de forma divertida. No Sarau, você também cria uma letra engraçada!"},
+ {q:"A paródia que fala de lavar as mãos com sabão usa a melodia de qual música?", c:"Cai, cai balão", e:["Parabéns pra você","Bola de meia, bola de gude","Aleluia"], x:"A paródia do \"vilão\" que sai da mão com sabão usa a melodia de Cai, cai balão. Outras paródias: com a melodia de Bola de meia, bola de gude (o menino que chuta a bola e o velhinho do caminhão) e com a de Parabéns pra você, que ensina a assobiar."},
+ {q:"Qual povo indígena brasileiro toca a takuara, um longo instrumento de sopro feito de bambu?", c:"Yawalapiti", e:["Ba-Benzélé","Aborígenes","Italianos"], x:"Os indígenas do povo Yawalapiti tocam a takuara durante as festividades da tribo. A humanidade sempre gostou de fazer sons assoprando um tubo."},
+ {q:"O didgeridoo, tocado pelos aborígenes da Austrália, é um longo tubo feito de:", c:"Madeira de eucalipto", e:["Bambu","Caule de mamão","Argila"], x:"O didgeridoo é um dos instrumentos mais antigos do mundo e é feito de madeira de eucalipto."},
+ {q:"O povo Ba-Benzélé vive em Camarões e na República Centro-Africana e é conhecido como pigmeus. A flauta que eles tocam é feita com:", c:"Caule de mamão", e:["Bambu","Madeira de eucalipto","Argila"], x:"Os Ba-Benzélé, da África Central, tocam uma pequena flauta feita com caule de mamão."},
+ {q:"No didgeridoo de cartolina, o que é preciso fazer para criar sons?", c:"Vibrar os lábios e fazer sons com a voz", e:["Só soprar bem forte","Colocar água dentro","Bater o tubo no chão"], x:"Não basta soprar: é preciso vibrar os lábios e produzir sons com a voz. O tubo tem uns 4 cm de diâmetro."},
+ {q:"Sobre a garraflauta com água, qual frase está CERTA?", c:"Mais água deixa o som agudo; menos água deixa o som grave", e:["Mais água deixa o som grave; menos água deixa o som agudo","A água não muda nada no som","Com água a garraflauta não faz som nenhum"], x:"Mais água: menos espaço, ar mais rápido, som fininho (agudo). Menos água: mais espaço, ar mais devagar, som grosso (grave)."},
+ {q:"Os sons da garraflauta, que vão de graves a agudos, são vibrações chamadas:", c:"Notas musicais", e:["Paródias","Melodias","Afinadores"], x:"Os sons que variam de graves a agudos são vibrações chamadas notas musicais. As garraflautas vão do som mais baixo (grave) ao mais alto (agudo)."},
+ {q:"Para que serve o AFINADOR?", c:"Para identificar as notas musicais de um instrumento", e:["Para encher a garraflauta de água","Para enrolar a cartolina","Para escrever a letra da música"], x:"O afinador é um aparelho que identifica as notas emitidas pela garraflauta ou por outros instrumentos."},
+ {q:"No afinador, a nota Fá aparece como qual letra?", c:"F", e:["A","S","D"], x:"Se a garraflauta toca a nota Fá, no afinador aparece a letra \"F\"."},
+ {q:"Qual é a ordem em que as notas musicais geralmente são estudadas?", c:"Dó, Ré, Mi, Fá, Sol, Lá, Si", e:["Dó, Mi, Ré, Fá, Lá, Sol, Si","Si, Dó, Fá, Ré, Mi, Lá, Sol","Ré, Dó, Mi, Sol, Fá, Si, Lá"], x:"As notas, na ordem em que são estudadas: Dó, Ré, Mi, Fá, Sol, Lá, Si."}
+];
+const BOM=["Isso aí! 🎉","Mandou bem! 🌟","Acertou! 🎵","Que fôlego! 🌬️","Show! 👏","Perfeito! 💜"];
+const QUASE=["Quase! Vamos ver 👀","Tudo bem, errar faz parte! 💪","Ops! Olha só a certa 👇"];
+let ordem=[],i=0,acertos=0,erradas=[];
+function emb(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]];}return a;}
+function mostra(id){document.querySelectorAll('.tela').forEach(t=>t.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0);}
+function comecar(){ordem=emb(PERGUNTAS);i=0;acertos=0;erradas=[];document.getElementById('revisao').innerHTML='';mostra('jogo');render();}
+function render(){
+ const p=ordem[i];
+ document.getElementById('cont').textContent=`Pergunta ${i+1} de ${ordem.length}`;
+ document.getElementById('prog').style.width=(i/ordem.length*100)+'%';
+ document.getElementById('perg').textContent=p.q;
+ const box=document.getElementById('alts');box.innerHTML='';
+ emb([p.c,...p.e]).forEach(t=>{const b=document.createElement('button');b.className='alt';b.textContent=t;b.onclick=()=>responde(b,t);box.appendChild(b);});
+ const fb=document.getElementById('fb');fb.className='fb';fb.textContent='';
+ document.getElementById('prox').style.display='none';
+}
+function responde(b,t){
+ const p=ordem[i];const fb=document.getElementById('fb');
+ document.querySelectorAll('.alt').forEach(x=>{x.disabled=true;if(x.textContent===p.c)x.classList.add('certa');});
+ if(t===p.c){acertos++;fb.className='fb ok';fb.textContent=BOM[Math.floor(Math.random()*BOM.length)]+' '+p.x;}
+ else{b.classList.add('errada');erradas.push(p);fb.className='fb no';fb.textContent=QUASE[Math.floor(Math.random()*QUASE.length)]+' Resposta certa: '+p.c+'. '+p.x;}
+ const pr=document.getElementById('prox');pr.style.display='block';pr.textContent=i===ordem.length-1?'Ver resultado 🏆':'Próxima ➜';
+}
+function proxima(){i++;if(i<ordem.length)render();else fim();}
+function fim(){
+ document.getElementById('prog').style.width='100%';
+ const pc=acertos/ordem.length;const n=pc>=.9?3:pc>=.6?2:1;
+ document.getElementById('estrelas').textContent='⭐'.repeat(n);
+ document.getElementById('placar').textContent=`${acertos} de ${ordem.length} acertos`;
+ document.getElementById('msg').textContent=n===3?'Parabéns, Martina! Você é craque da Arte do Sopro! 🎺':n===2?'Muito bem, Martina! Mais uma rodada e você arrasa! 🎶':'Continue treinando, Martina! Você está aprendendo! 💪';
+ document.getElementById('btnRev').style.display=erradas.length?'block':'none';
+ mostra('fim');
+}
+function revisar(){document.getElementById('revisao').innerHTML=erradas.map(p=>`<div class="rev"><b>${p.q}</b><br>✅ ${p.c}<br><small>${p.x}</small></div>`).join('');}
+</script></body></html>
