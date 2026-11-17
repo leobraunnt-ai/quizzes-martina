@@ -1,4 +1,10 @@
 {
   "cleanUrls": true,
-  "trailingSlash": true
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/planeta-limpo/:path*", "destination": "/geografia/planeta-limpo/:path*", "permanent": true },
+    { "source": "/missao-solo-e-ar/:path*", "destination": "/ciencias/missao-solo-e-ar/:path*", "permanent": true },
+    { "source": "/boa-convivencia/:path*", "destination": "/filosofia/boa-convivencia/:path*", "permanent": true },
+    { "source": "/sopro-magico/:path*", "destination": "/artes/sopro-magico/:path*", "permanent": true }
+  ]
 }

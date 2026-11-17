@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mural de Missões da Martina 🚀</title>
+<title>Biblioteca de Estudos da Martina 📚</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -17,56 +17,121 @@
       radial-gradient(1.5px 1.5px at 220px 160px, #fff9, transparent),
       radial-gradient(2px 2px at 300px 40px, #fff5, transparent);
     background-size: 340px 220px; }
-  header { text-align: center; position: relative; margin-bottom: 26px; }
+  header { text-align: center; position: relative; margin-bottom: 22px; }
   .emoji { font-size: 48px; }
-  h1 { font-size: clamp(28px, 7vw, 44px); font-weight: 900; letter-spacing: 1px;
+  h1 { font-size: clamp(26px, 7vw, 42px); font-weight: 900; letter-spacing: 1px;
     text-shadow: 0 4px 0 #f59e0b55; margin: 6px 0; }
   .sub { font-size: 18px; opacity: .9; }
-  main { max-width: 560px; margin: 0 auto; display: grid; gap: 16px; position: relative; }
-  a.card { display: flex; align-items: center; gap: 16px; text-decoration: none; color: #1f1b3a;
-    background: #fff; border-radius: 22px; padding: 18px; min-height: 92px;
-    box-shadow: 0 6px 0 rgba(0,0,0,.25); transition: transform .12s; border-left: 10px solid var(--c); }
-  a.card:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba(0,0,0,.25); }
-  .icon { font-size: 44px; flex-shrink: 0; }
-  .info h2 { font-size: 21px; font-weight: 900; }
+  main { max-width: 600px; margin: 0 auto; position: relative; }
+  .filtros { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 22px; }
+  .filtros button { font: inherit; font-weight: 800; font-size: 14px; border: 0; cursor: pointer;
+    padding: 8px 14px; border-radius: 99px; background: #ffffff22; color: #fff; }
+  .filtros button.ativo { background: #fff; color: #1f1b3a; }
+  section { margin-bottom: 26px; }
+  section h2.materia { font-size: 22px; font-weight: 900; margin: 0 0 12px 4px; display: flex; gap: 8px; align-items: center; }
+  .grid { display: grid; gap: 14px; }
+  .card { background: #fff; color: #1f1b3a; border-radius: 22px; padding: 16px 18px;
+    box-shadow: 0 6px 0 rgba(0,0,0,.25); border-left: 10px solid var(--c); }
+  .topo { display: flex; gap: 14px; align-items: center; }
+  .icon { font-size: 40px; flex-shrink: 0; }
+  .info h3 { font-size: 20px; font-weight: 900; }
   .info p { font-size: 15px; color: #5b5675; margin-top: 2px; }
-  .tag { display: inline-block; font-size: 12px; font-weight: 800; color: #fff; background: var(--c);
-    border-radius: 99px; padding: 3px 10px; margin-top: 6px; }
+  .data { font-size: 12px; font-weight: 800; color: #8a85a3; margin-top: 4px; }
+  .botoes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .botoes a, .botoes span { display: flex; align-items: center; justify-content: center; gap: 6px;
+    text-decoration: none; font-weight: 900; font-size: 15px; padding: 12px 8px; border-radius: 14px;
+    box-shadow: 0 4px 0 rgba(0,0,0,.18); }
+  .botoes a:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,.18); }
+  .quiz { background: var(--c); color: #fff; }
+  .pdf { background: #f3f1fb; color: #1f1b3a; border: 2px solid var(--c); }
+  .breve { background: #eee; color: #999; box-shadow: none !important; }
   footer { text-align: center; margin-top: 30px; opacity: .7; font-size: 14px; position: relative; }
 </style>
 </head>
 <body>
 <div class="stars"></div>
 <header>
-  <div class="emoji">🚀⭐📚</div>
-  <h1>MURAL DE MISSÕES</h1>
-  <p class="sub">Escolha uma missão, Martina! Aprender é uma aventura! 🔎</p>
+  <div class="emoji">🚀📚⭐</div>
+  <h1>BIBLIOTECA DA MARTINA</h1>
+  <p class="sub">Leia o resumo 📄 e depois encare a missão 🎯</p>
 </header>
-<main id="lista"></main>
-<footer>Novas missões aparecem aqui automaticamente ✨</footer>
+<main>
+  <nav class="filtros" id="filtros"></nav>
+  <div id="lista"></div>
+</main>
+<footer>Novos estudos aparecem aqui automaticamente ✨</footer>
 <script>
-  // Lista de missões — a mais recente primeiro.
-  // Para adicionar: { titulo, materia, tema, icone, cor, link }
-  const missoes = [
-    { titulo: "Missão Sopro Mágico", materia: "Artes", tema: "Arte do Sopro: assobios, melodia, paródia e sons graves e agudos", icone: "🎵", cor: "#e65100",
-      link: "/sopro-magico/" },
-    { titulo: "Missão Solo e Ar", materia: "Ciências", tema: "O solo, os aquíferos e o ar", icone: "🌱", cor: "#8d5524",
-      link: "/missao-solo-e-ar/" },
-    { titulo: "Missão Boa Convivência", materia: "Filosofia", tema: "Limites, certo e errado e o Equinócio", icone: "🤝", cor: "#c4265e",
-      link: "/boa-convivencia/" },
-    { titulo: "Missão Planeta Limpo", materia: "Geografia", tema: "Consumo, lixo e reciclagem", icone: "♻️", cor: "#2a9d8f",
-      link: "/planeta-limpo/" },
-    { titulo: "Missão Terra", materia: "Ciências", tema: "A Terra e os Astros", icone: "🌎", cor: "#2563eb",
-      link: "https://missao-terra-martina.vercel.app/" }
+  // Cores e ícones de cada matéria
+  const materias = {
+    "Ciências":  { icone: "🔬", cor: "#2563eb" },
+    "Geografia": { icone: "🌍", cor: "#2a9d8f" },
+    "Filosofia": { icone: "🤔", cor: "#c4265e" },
+    "Artes":     { icone: "🎨", cor: "#e65100" },
+    "Português": { icone: "✏️", cor: "#7c3aed" },
+    "Matemática":{ icone: "➗", cor: "#d97706" },
+    "História":  { icone: "🏛️", cor: "#92400e" }
+  };
+  // Estudos — o mais recente primeiro.
+  // Para adicionar: { titulo, materia, tema, icone, data, quiz, pdf }  (pdf: null = "em breve")
+  const estudos = [
+    { titulo: "Missão Sopro Mágico", materia: "Artes", tema: "Arte do Sopro: assobios, melodia, paródia e sons graves e agudos", icone: "🎵", data: "16/11/2026",
+      quiz: "/artes/sopro-magico/", pdf: "/artes/sopro-magico/resumo.pdf" },
+    { titulo: "Missão Solo e Ar", materia: "Ciências", tema: "O solo, os aquíferos e o ar", icone: "🌱", data: "16/11/2026",
+      quiz: "/ciencias/missao-solo-e-ar/", pdf: "/ciencias/missao-solo-e-ar/resumo.pdf" },
+    { titulo: "Missão Boa Convivência", materia: "Filosofia", tema: "Limites, certo e errado e o Equinócio", icone: "🤝", data: "16/11/2026",
+      quiz: "/filosofia/boa-convivencia/", pdf: "/filosofia/boa-convivencia/resumo.pdf" },
+    { titulo: "Missão Planeta Limpo", materia: "Geografia", tema: "Consumo, lixo e reciclagem", icone: "♻️", data: "15/11/2026",
+      quiz: "/geografia/planeta-limpo/", pdf: "/geografia/planeta-limpo/resumo.pdf" },
+    { titulo: "Missão Terra", materia: "Ciências", tema: "A Terra e os Astros", icone: "🌎", data: "",
+      quiz: "https://missao-terra-martina.vercel.app/", pdf: "/ciencias/missao-terra/resumo.pdf" }
   ];
+
   const lista = document.getElementById("lista");
-  missoes.forEach(m => {
-    const a = document.createElement("a");
-    a.className = "card"; a.href = m.link; a.style.setProperty("--c", m.cor);
-    a.innerHTML = `<span class="icon">${m.icone}</span>
-      <span class="info"><h2>${m.titulo}</h2><p>${m.tema}</p><span class="tag">${m.materia} • 3º ano</span></span>`;
-    lista.appendChild(a);
+  const filtros = document.getElementById("filtros");
+  const ordem = [...new Set(estudos.map(e => e.materia))];
+
+  async function existe(url) {
+    try { const r = await fetch(url, { method: "HEAD" }); return r.ok; } catch (e) { return false; }
+  }
+
+  function card(e) {
+    const m = materias[e.materia] || { cor: "#555" };
+    const div = document.createElement("div");
+    div.className = "card"; div.style.setProperty("--c", m.cor);
+    div.innerHTML = `<div class="topo"><span class="icon">${e.icone}</span>
+      <span class="info"><h3>${e.titulo}</h3><p>${e.tema}</p>${e.data ? `<div class="data">📅 ${e.data}</div>` : ""}</span></div>
+      <div class="botoes">
+        <span class="breve pdfslot">📄 Resumo em breve</span>
+        <a class="quiz" href="${e.quiz}">🎯 Fazer o quiz</a>
+      </div>`;
+    if (e.pdf) existe(e.pdf).then(ok => {
+      if (!ok) return;
+      const a = document.createElement("a");
+      a.className = "pdf"; a.href = e.pdf; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = "📄 Ver resumo";
+      div.querySelector(".pdfslot").replaceWith(a);
+    });
+    return div;
+  }
+
+  function render(filtro) {
+    lista.innerHTML = "";
+    ordem.filter(mat => !filtro || mat === filtro).forEach(mat => {
+      const m = materias[mat] || { icone: "📘" };
+      const sec = document.createElement("section");
+      sec.innerHTML = `<h2 class="materia">${m.icone} ${mat}</h2><div class="grid"></div>`;
+      estudos.filter(e => e.materia === mat).forEach(e => sec.querySelector(".grid").appendChild(card(e)));
+      lista.appendChild(sec);
+    });
+    [...filtros.children].forEach(b => b.classList.toggle("ativo", (b.dataset.m || "") === (filtro || "")));
+  }
+
+  [["", "⭐ Todas"], ...ordem.map(mat => [mat, `${(materias[mat] || {}).icone || "📘"} ${mat}`])].forEach(([val, txt]) => {
+    const b = document.createElement("button");
+    b.textContent = txt; b.dataset.m = val; b.onclick = () => render(val);
+    filtros.appendChild(b);
   });
+  render("");
 </script>
 </body>
 </html>
