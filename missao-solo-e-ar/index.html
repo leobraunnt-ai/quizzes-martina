@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Missão Solo e Ar — Quiz de Ciências</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;font-size:19px;color:#2b2b3a;min-height:100vh;background:linear-gradient(180deg,#bfe9ff 0%,#e8f8ff 45%,#c9a27a 45%,#8d5524 100%);background-attachment:fixed;display:flex;justify-content:center;padding:16px}
+.box{width:100%;max-width:560px;background:#fffdf7;border-radius:26px;padding:22px 18px;box-shadow:0 8px 24px #0003;align-self:flex-start}
+h1{font-size:32px;color:#2f9e44;text-align:center;line-height:1.1}
+.sub{text-align:center;color:#8d5524;font-weight:700;margin:6px 0 14px}
+.emo{font-size:56px;text-align:center;margin:8px 0}
+.btn{display:block;width:100%;min-height:56px;border:none;border-radius:18px;font-size:20px;font-weight:800;color:#fff;background:#2f9e44;margin-top:12px;cursor:pointer;box-shadow:0 4px 0 #1f6e2f}
+.btn.alt{background:#f76707;box-shadow:0 4px 0 #b84d05}
+.prog{font-weight:800;color:#8d5524;font-size:16px}
+.bar{height:14px;background:#eee;border-radius:10px;margin:6px 0 14px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#51cf66,#2f9e44);transition:width .3s}
+.q{font-size:22px;font-weight:800;margin-bottom:12px;line-height:1.3}
+.op{display:block;width:100%;min-height:56px;text-align:left;padding:12px 14px;margin:8px 0;border-radius:16px;border:3px solid #d0bfa5;background:#fff;font-size:19px;cursor:pointer;color:#2b2b3a}
+.op:disabled{cursor:default}
+.op.ok{background:#d3f9d8;border-color:#2f9e44}
+.op.no{background:#ffe3e3;border-color:#e03131}
+.fb{margin-top:10px;padding:12px 14px;border-radius:16px;font-size:18px;display:none}
+.fb.ok{display:block;background:#ebfbee;border:3px solid #51cf66}
+.fb.no{display:block;background:#fff4e6;border:3px solid #ff922b}
+.stars{font-size:52px;text-align:center;margin:10px 0}
+.score{font-size:28px;font-weight:800;text-align:center;color:#2f9e44}
+.hide{display:none}
+</style></head><body>
+<div class="box">
+  <div id="inicio">
+    <div class="emo">🌱🪱💨</div>
+    <h1>Missão Solo e Ar</h1>
+    <p class="sub">Quiz de Ciências • 3º ano</p>
+    <p style="text-align:center">Exploradora Martina, sua missão é descobrir os segredos do <b>solo</b>, dos <b>aquíferos</b> e do <b>ar</b>! São <b id="tot"></b> desafios. 🔎</p>
+    <p style="text-align:center;margin-top:8px;font-weight:800;color:#f76707">Aprender é uma aventura! 🔎</p>
+    <button class="btn" id="comecar">Começar 🚀</button>
+  </div>
+  <div id="jogo" class="hide">
+    <div class="prog" id="prog"></div>
+    <div class="bar"><i id="barra"></i></div>
+    <div class="q" id="perg"></div>
+    <div id="ops"></div>
+    <div class="fb" id="fb"></div>
+    <button class="btn hide" id="prox">Próxima ➜</button>
+  </div>
+  <div id="fim" class="hide">
+    <div class="emo">🏆</div>
+    <div class="score" id="placar"></div>
+    <div class="stars" id="estrelas"></div>
+    <p style="text-align:center;font-weight:700" id="msg"></p>
+    <button class="btn" id="denovo">Jogar de novo 🔄</button>
+    <button class="btn alt" id="revisar">Revisar as que errei 📖</button>
+  </div>
+</div>
+<script id="dados" type="application/json">
+[
+{"ref":"componentes","q":"Quais são os componentes do solo?","c":"Partículas de rochas, matéria orgânica, água e ar","e":["Só areia e pedras","Plástico, vidro, água e ar","Nuvens, chuva, Sol e vento"],"x":"O solo é feito de partículas de rochas, matéria orgânica, água e ar."},
+{"ref":"materia-organica","q":"O que é a matéria orgânica do solo?","c":"Restos de seres vivos, como folhas secas e frutos apodrecidos","e":["Pedacinhos que se soltam das rochas","O ar que fica entre as partículas","A água da chuva"],"x":"Matéria orgânica são restos de seres vivos. Ao se decompor, ela solta nutrientes."},
+{"ref":"formacao","q":"O que desgasta as rochas e ajuda a formar o solo?","c":"O Sol, o vento, a água e os seres vivos","e":["Só as máquinas das pessoas","Os carros e os ônibus","A Lua e as estrelas"],"x":"O Sol, o vento, a água e os seres vivos desgastam as rochas, e o solo se forma em milhares de anos."},
+{"ref":"jovem-antigo","q":"Complete a frase: o solo antigo é ______ que o solo jovem.","c":"mais profundo","e":["mais raso","mais novo","mais fino"],"x":"Com o tempo o desgaste chega às partes mais profundas da rocha. Por isso o solo antigo é mais profundo que o solo jovem."},
+{"ref":"perm-poro","q":"O que é a permeabilidade do solo?","c":"A capacidade do solo de deixar a água passar","e":["A quantidade de matéria orgânica do solo","A cor do solo","A quantidade de minhocas do solo"],"x":"Permeabilidade é a capacidade do solo de deixar a água passar."},
+{"ref":"fertilidade","q":"A fertilidade do solo tem a ver com a quantidade de…","c":"matéria orgânica","e":["pedras","lixo","areia"],"x":"Fertilidade tem a ver com a quantidade de matéria orgânica, que solta nutrientes para as raízes."},
+{"ref":"arenoso","q":"Na praia o solo é arenoso. Qual frase está certa sobre ele?","c":"Tem bastante areia e a água passa com facilidade","e":["É muito fértil e tem muito húmus","A água tem muita dificuldade para passar","É formado principalmente por argila"],"x":"O solo arenoso tem bastante areia, é permeável, poroso e pouco fértil."},
+{"ref":"argiloso","q":"Qual solo tem bastante argila e poderia ser usado para fazer cerâmica?","c":"Solo argiloso","e":["Solo arenoso","Solo humífero","Solo jovem"],"x":"O solo argiloso tem bastante argila, que pode virar cerâmica. Nele a água passa com dificuldade."},
+{"ref":"humifero","q":"Qual é o melhor solo para plantar uma horta?","c":"Solo humífero, que tem muito húmus","e":["Solo arenoso, que é pouco fértil","Solo argiloso, que é pouco permeável","Solo sem nenhuma matéria orgânica"],"x":"O solo humífero tem muito húmus, é bastante fértil e tem a quantidade ideal de água."},
+{"ref":"micro-queimadas","q":"Por que as queimadas deixam o solo menos fértil?","c":"O calor mata os micro-organismos e o vento leva as cinzas com os nutrientes","e":["Porque deixam o solo mais úmido","Porque trazem mais minhocas para o solo","Porque aumentam o húmus do solo"],"x":"As altas temperaturas matam os micro-organismos, e o vento leva as cinzas com os nutrientes."},
+{"ref":"minhocas","q":"Como as minhocas ajudam o solo?","c":"Fazem túneis que ajudam a água e o ar a circular","e":["Comem as raízes das plantas","Deixam o solo duro e compactado","Tiram toda a água do solo"],"x":"As minhocas fazem túneis por onde a água e o ar circulam, e suas fezes são ricas em húmus."},
+{"ref":"mineracao","q":"O que é a mineração?","c":"Tirar minerais das rochas do solo, como ferro, alumínio e cobre","e":["Plantar arroz, feijão e banana","Criar galinhas e vacas","Separar o lixo reciclável"],"x":"Mineração é a extração dos minerais das rochas, como ferro, alumínio e cobre."},
+{"ref":"agri-pecuaria","q":"Criar animais para produzir carne, leite e ovos se chama:","c":"Pecuária","e":["Agricultura","Mineração","Erosão"],"x":"Pecuária é a criação de animais. Agricultura é o cultivo de plantas."},
+{"ref":"rotacao","q":"Na rotação de culturas com milho e soja, onde vivem as bactérias que fertilizam o solo?","c":"Nas raízes da soja","e":["Nas raízes do milho","Nas folhas do milho","Nas flores da soja"],"x":"Nas raízes da soja vivem bactérias que fertilizam o solo — da soja, não do milho!"},
+{"ref":"agroflorestal","q":"O que é o sistema agroflorestal?","c":"Ter árvores dentro das áreas de plantação","e":["Cortar todas as árvores para plantar","Usar mais agrotóxicos na plantação","Deixar o solo sem nenhuma planta"],"x":"No sistema agroflorestal há árvores nas plantações: as raízes seguram o solo e a copa protege do vento e da chuva."},
+{"ref":"erosao-assoreamento","q":"Um terreno ficou sem cobertura vegetal. A chuva e o vento levaram o solo e formaram buracos. Isso se chama…","c":"Erosão","e":["Assoreamento","Rotação de culturas","Fertilidade"],"x":"Isso é erosão. Quando esse solo vai parar no rio e o rio fica raso, é assoreamento. A cobertura vegetal evita os dois."},
+{"ref":"lixo","q":"O que é o chorume?","c":"Um líquido escuro que sai do lixo quando ele se decompõe","e":["Um tipo de solo muito fértil","A água que fica embaixo do solo","Um gás que existe no ar"],"x":"O chorume pode poluir o solo. Por isso o lixo que não pode ser reciclado vai para o aterro sanitário, onde o chorume é tratado."},
+{"ref":"aquiferos","q":"Qual é o maior aquífero do mundo, que fica na Região Norte do Brasil?","c":"Sistema Aquífero Grande Amazônia","e":["Sistema Aquífero Guarani","Rio Amazonas","Oceano Atlântico"],"x":"O Sistema Aquífero Grande Amazônia é o maior do mundo. O Guarani fica no Sul, Sudeste e Centro-Oeste."},
+{"ref":"gases-ar","q":"Qual gás existe em MAIOR quantidade no ar?","c":"Gás nitrogênio","e":["Gás oxigênio","Gás carbônico","Vapor-d'água"],"x":"O ar tem mais gás nitrogênio, depois oxigênio, e menos ainda gás carbônico."},
+{"ref":"atmosfera","q":"O que é a atmosfera?","c":"A camada de ar ao redor da Terra","e":["Uma camada de rochas embaixo do solo","A água que fica embaixo do solo","O líquido escuro que sai do lixo"],"x":"A atmosfera é a camada de ar ao redor da Terra. Sem ela não haveria vida."}
+]
+</script>
+<script>
+const TODAS=JSON.parse(document.getElementById('dados').textContent);
+const $=id=>document.getElementById(id);
+const ACERTO=["Muito bem! 🎉","Arrasou! 🌟","Isso aí, exploradora! 🚀","Acertou! 💚","Mandou bem! 👏"];
+const ERRO=["Quase! Vamos aprender 💡","Tudo bem, agora você sabe! 🌱","Opa! Olha a resposta certa 👀"];
+let lista=[],i=0,pontos=0,erradas=[];
+const emb=a=>{a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a};
+$('tot').textContent=TODAS.length;
+function iniciar(qs){lista=qs;i=0;pontos=0;erradas=[];$('inicio').classList.add('hide');$('fim').classList.add('hide');$('jogo').classList.remove('hide');mostrar()}
+function mostrar(){
+  const p=lista[i];$('prog').textContent=`Pergunta ${i+1} de ${lista.length}`;
+  $('barra').style.width=(i/lista.length*100)+'%';$('perg').textContent=p.q;
+  const fb=$('fb');fb.className='fb';fb.textContent='';$('prox').classList.add('hide');
+  const ops=$('ops');ops.innerHTML='';
+  emb([p.c,...p.e]).forEach(t=>{const b=document.createElement('button');b.className='op';b.textContent=t;b.onclick=()=>responder(b,t);ops.appendChild(b)});
+}
+function responder(b,t){
+  const p=lista[i];document.querySelectorAll('.op').forEach(o=>{o.disabled=true;if(o.textContent===p.c)o.classList.add('ok')});
+  const fb=$('fb');
+  if(t===p.c){pontos++;fb.className='fb ok';fb.innerHTML='<b>'+ACERTO[Math.floor(Math.random()*ACERTO.length)]+'</b><br>'+p.x}
+  else{b.classList.add('no');erradas.push(p);fb.className='fb no';fb.innerHTML='<b>'+ERRO[Math.floor(Math.random()*ERRO.length)]+'</b><br>Resposta certa: <b>'+p.c+'</b>. '+p.x}
+  const pr=$('prox');pr.textContent=i+1<lista.length?'Próxima ➜':'Ver resultado 🏁';pr.classList.remove('hide');
+}
+$('prox').onclick=()=>{i++;if(i<lista.length)mostrar();else fim()};
+function fim(){
+  $('jogo').classList.add('hide');$('fim').classList.remove('hide');$('barra').style.width='100%';
+  const pc=pontos/lista.length;$('placar').textContent=`Você acertou ${pontos} de ${lista.length}!`;
+  const n=pc>=0.85?3:pc>=0.6?2:1;$('estrelas').textContent='⭐'.repeat(n);
+  $('msg').textContent=n===3?'Parabéns, missão cumprida! Você é craque em solo e ar! 🏆':n===2?'Muito bom! Revise as que errou e fique ainda melhor! 💪':'Você está aprendendo! Leia o resumo e tente de novo! 🌱';
+  $('revisar').classList.toggle('hide',erradas.length===0);
+}
+$('comecar').onclick=()=>iniciar(emb(TODAS));
+$('denovo').onclick=()=>iniciar(emb(TODAS));
+$('revisar').onclick=()=>iniciar(emb(erradas));
+</script>
+</body></html>
