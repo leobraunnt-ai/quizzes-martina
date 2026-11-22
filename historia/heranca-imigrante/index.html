@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Missão Imigrantes — Quiz de História</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;font-size:18px;color:#2b2b3a;
+ background:linear-gradient(160deg,#fff3d6 0%,#ffe0ec 50%,#dff1ff 100%);min-height:100vh}
+.wrap{max-width:640px;margin:0 auto;padding:18px 16px 40px}
+.card{background:#fff;border-radius:24px;padding:22px 18px;box-shadow:0 6px 0 rgba(0,0,0,.08)}
+h1{font-size:34px;margin:8px 0 4px;color:#8E44AD;text-align:center;line-height:1.1}
+.sub{text-align:center;font-weight:700;color:#555;margin:0 0 10px}
+.emo{font-size:64px;text-align:center;margin:6px 0}
+.lema{text-align:center;font-size:20px;font-weight:700;color:#E67E22;margin:8px 0 18px}
+.btn{display:block;width:100%;min-height:56px;border:none;border-radius:18px;font-size:20px;font-weight:800;cursor:pointer;padding:12px 16px;font-family:inherit}
+.go{background:#2E86DE;color:#fff;box-shadow:0 5px 0 #1b5fa8}
+.go:active{transform:translateY(3px);box-shadow:0 2px 0 #1b5fa8}
+.sec{background:#fff;color:#8E44AD;border:3px solid #8E44AD;margin-top:12px}
+.top{display:flex;justify-content:space-between;align-items:center;font-weight:800;margin-bottom:8px;color:#555}
+.bar{height:14px;background:#eee;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.bar>div{height:100%;background:linear-gradient(90deg,#27AE60,#2E86DE);width:0;transition:width .3s}
+.q{font-size:21px;font-weight:800;margin:4px 0 16px;line-height:1.3}
+.opt{display:block;width:100%;text-align:left;min-height:56px;margin:0 0 12px;padding:12px 16px;border-radius:16px;border:3px solid #d9d4e8;background:#faf8ff;font-size:18px;font-family:inherit;cursor:pointer;color:#2b2b3a;line-height:1.3}
+.opt:disabled{cursor:default}
+.opt.ok{background:#e3f8ea;border-color:#27AE60;font-weight:800}
+.opt.bad{background:#fdeaea;border-color:#E74C3C}
+.fb{border-radius:16px;padding:12px 14px;margin:6px 0 14px;font-size:18px;line-height:1.35;display:none}
+.fb.ok{display:block;background:#e3f8ea;border:2px solid #27AE60}
+.fb.bad{display:block;background:#fff3e6;border:2px solid #E67E22}
+.hidden{display:none}
+.score{font-size:52px;text-align:center;font-weight:900;color:#2E86DE;margin:4px 0}
+.stars{font-size:52px;text-align:center;letter-spacing:6px}
+.msg{text-align:center;font-size:21px;font-weight:800;margin:10px 0 18px}
+.rev{margin-top:16px}
+.rev .item{border-left:6px solid #E67E22;background:#fff8f0;border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:17px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="start" class="card">
+  <div class="emo">🧳🚢</div>
+  <h1>Missão Imigrantes</h1>
+  <p class="sub">Quiz de História • 3º ano</p>
+  <p class="lema">Aprender é uma aventura! 🔎</p>
+  <p style="text-align:center;margin:0 0 18px">Viaje com os imigrantes pelo campo e pela cidade e mostre tudo o que você aprendeu! 🌾🏙️📰</p>
+  <button class="btn go" id="bStart">Começar 🚀</button>
+</div>
+
+<div id="game" class="card hidden">
+  <div class="top"><span id="cnt">Pergunta 1 de 20</span><span id="pts">⭐ 0</span></div>
+  <div class="bar"><div id="prog"></div></div>
+  <div class="q" id="qt"></div>
+  <div id="opts"></div>
+  <div class="fb" id="fb"></div>
+  <button class="btn go hidden" id="bNext">Próxima ➜</button>
+</div>
+
+<div id="end" class="card hidden">
+  <div class="emo">🏆</div>
+  <div class="stars" id="stars"></div>
+  <div class="score" id="score"></div>
+  <div class="msg" id="msg"></div>
+  <button class="btn go" id="bAgain">Jogar de novo 🔁</button>
+  <button class="btn sec" id="bReview">Revisar as que errei 📖</button>
+  <div class="rev hidden" id="rev"></div>
+</div>
+
+</div>
+<script>
+// Cada pergunta: a primeira alternativa (o[0]) é a correta; as alternativas são embaralhadas a cada partida.
+const PERGUNTAS = [
+ {p:"O que é um imigrante?", o:["Uma pessoa que chega em um país estrangeiro","Uma pessoa que nunca sai da sua cidade","Um vendedor de tecidos","Um tipo de jornal"], e:"Imigrante é a pessoa que chega em um país estrangeiro. Ela é imigrante no seu novo local de moradia.", cobre:["imigrante"], chave:"pais estrangeiro"},
+ {p:"Colônias são locais onde grupos de imigrantes se estabeleceram. Como eram chamados os imigrantes que formavam colônias?", o:["Colonos","Mascates","Telegrafistas","Chacareiros"], e:"Alguns imigrantes formaram colônias, por isso eram chamados de colonos.", cobre:["colonos","colonias"], chave:"colonos"},
+ {p:"Que grupos de imigrantes formaram colônias nas áreas rurais de São Paulo, Paraná, Rio Grande do Sul e Santa Catarina?", o:["Italianos, alemães, poloneses e holandeses","Sírios e libaneses","Belgas e ingleses","Só os portugueses"], e:"Famílias que conheciam agricultura e criação de animais, como italianos, alemães, poloneses e holandeses, formaram colônias no campo.", cobre:["grupos_rurais","estados_rurais","rural"], chave:"poloneses"},
+ {p:"O município de Carambeí, no Paraná, nasceu de uma colônia de holandeses. Em que eles se especializaram?", o:["Derivados do leite (queijos, manteigas, natas) e doces","Construção de postes de telégrafo","Venda de fósforos nas ruas","Plantação de chuchu"], e:"Os holandeses de Carambeí fizeram derivados do leite e doces tradicionais. Isso incentivou a criação de gado.", cobre:["carambei","leite"], chave:"derivados do leite"},
+ {p:"Os primeiros imigrantes japoneses chegaram ao Brasil há mais de 100 anos. Para quais estados muitos deles foram?", o:["São Paulo e Paraná, e depois Amazonas e Amapá","Rio de Janeiro e Bahia","Só o Espírito Santo","Rio Grande do Sul e Santa Catarina"], e:"Muitos japoneses foram para São Paulo e Paraná. Nos anos seguintes, também para Amazonas e Amapá.", cobre:["jp_100","jp_estados"], chave:"amapa"},
+ {p:"O que eram os armazéns e empórios?", o:["Pontos de venda que vendiam principalmente alimentos","Escolas para os filhos dos imigrantes","Jornais escritos em italiano","Festas para comemorar a colheita"], e:"Armazéns e empórios eram pontos de venda que abasteciam as comunidades, principalmente com alimentos.", cobre:["armazens"], chave:"pontos de venda"},
+ {p:"Nas festas de fim de colheita, como a Festa da Uva de Caxias do Sul, além de comemorar, o que os imigrantes italianos queriam?", o:["Incentivar o comércio com outros municípios","Construir um viaduto","Mandar mensagens por telégrafo","Criar um jornal em árabe"], e:"Os italianos comemoravam o fim da colheita e queriam incentivar o comércio com outros municípios.", cobre:["festas","festa_uva","festa_comercio"], chave:"incentivar o comercio"},
+ {p:"Quais destes são elementos culturais que os imigrantes trouxeram para o Brasil?", o:["Hábitos alimentares, artes marciais e esportes","Celulares, computadores e tablets","Postes, cabos e fios","Só roupas e sapatos"], e:"Eles trouxeram hábitos alimentares, formas de construir moradias, expressões do vocabulário, artes marciais e esportes.", cobre:["heranca"], chave:"artes marciais"},
+ {p:"Os imigrantes japoneses trouxeram o ponkan por volta de 1920. O ponkan é um tipo de…", o:["Tangerina","Caqui","Maçã","Morango"], e:"O ponkan (ou poncã) é um tipo de tangerina. Os japoneses também trouxeram variedades de caqui, tangerina, maçã e morango.", cobre:["ponkan","alimentos_jp"], chave:"ponkan"},
+ {p:"Alguns imigrantes sírios e libaneses trabalhavam como caixeiros-viajantes. Quem eram os caixeiros-viajantes?", o:["Vendedores ambulantes, também chamados de mascates","Fotógrafos de colônias","Telegrafistas dos correios","Donos de grandes fábricas"], e:"Caixeiros-viajantes eram vendedores ambulantes (mascates). Vendiam nas ruas, em praças ou de casa em casa, e também levavam notícias.", cobre:["caixeiros","cidade_trabalho"], chave:"mascates"},
+ {p:"O que é vendido nas lojas chamadas armarinhos?", o:["Tecidos, agulhas e fios","Queijos e frios","Leite e manteiga","Caqui e morango"], e:"Nos armarinhos são vendidos tecidos, agulhas e fios para fazer roupas, entre outros produtos.", cobre:["armarinhos"], chave:"agulhas"},
+ {p:"No livro “Meu avô árabe”, de qual país veio o Jido e o que ele vendia na loja?", o:["Veio da Síria e vendia tecidos","Veio da Itália e vendia queijos e frios","Veio do Japão e vendia caqui","Veio da Holanda e vendia leite"], e:"O Jido, avô da autora Maísa Zakzuk, veio da Síria e tinha a loja Tecidos Mehje. Quem vendia queijos e frios era o vizinho italiano.", cobre:["jido"], chave:"siria"},
+ {p:"Os jornais dos imigrantes melhoravam a comunicação entre colonos da mesma origem. Muitos textos eram escritos por voluntariado. O que é voluntariado?", o:["Fazer um trabalho por vontade própria, sem receber remuneração","Trabalhar só nas férias","Vender produtos de casa em casa","Escrever cartas para a família"], e:"Voluntariado é a ação de quem faz um trabalho por vontade própria, sem receber remuneração.", cobre:["voluntariado","jornais"], chave:"vontade propria"},
+ {p:"Qual destas foi uma experiência dos imigrantes nas áreas urbanas (cidades)?", o:["Instalação de fábricas","Criação de animais","Festas de colheita","Agricultura"], e:"Na cidade: abrir lojas e instalação de fábricas. No campo: agricultura, criação de animais, festas de colheita e colônias.", cobre:["campo_cidade","fabricas"], chave:"instalacao de fabricas"},
+ {p:"Quem inventou o telégrafo com fios, em 1844?", o:["Samuel B. Morse","Albert Richard Dietze","Antônio F. Monteiro","Bernardo Kucinski"], e:"O telégrafo com fios foi inventado pelo estadunidense Samuel B. Morse, em 1844. No Brasil, começou a ser usado 20 anos depois.", cobre:["morse"], chave:"morse"},
+ {p:"Como o telegrafista enviava uma mensagem pelo telégrafo?", o:["Transformava a mensagem em códigos de pontos e traços","Escrevia uma carta e mandava de navio","Gritava a mensagem na rua","Desenhava a mensagem no jornal"], e:"O telegrafista transformava a mensagem em pontos e traços. No destino, outro telegrafista decodificava a mensagem.", cobre:["telegrafista","telegrafo"], chave:"pontos e tracos"},
+ {p:"O telégrafo era muito caro. Então, como a maior parte dos imigrantes se comunicava com a família?", o:["Por cartas, que podiam levar meses para chegar","Por celular","Por e-mail","Por televisão"], e:"A maioria usava cartas, que podiam levar meses. Elas eram ditadas e lidas em voz alta. Notícias também chegavam pelos jornais.", cobre:["cartas"], chave:"cartas"},
+ {p:"Para construir moradias nas colônias e vilas, o que aconteceu com a natureza?", o:["Parte da vegetação foi desmatada e os colonos interferiram em rios e lagos","Os colonos plantaram uma floresta nova","Nada mudou na natureza","Os colonos não cortaram nenhuma árvore"], e:"Parte das vegetações naturais foi desmatada, e os colonos interferiram na água de rios e lagos próximos.", cobre:["desmatamento"], chave:"desmatada"},
+ {p:"As peças do viaduto de Santa Ifigênia, em São Paulo, foram fabricadas em qual país?", o:["Bélgica","Japão","Síria","Holanda"], e:"As peças foram feitas na Bélgica e vieram de navio até o porto de Santos. Hoje o viaduto é Patrimônio Cultural de São Paulo.", cobre:["viaduto"], chave:"belgica"},
+ {p:"Hoje chamamos de sustentáveis ações como descartar o lixo corretamente. No passado, nas chácaras, o lixo orgânico ficava ao sol e à chuva e virava…", o:["Húmus, um material muito fértil","Plástico","Areia da praia","Fertilizante químico de fábrica"], e:"O lixo orgânico se decompunha e virava húmus, um material muito fértil, rico em minerais. Os chacareiros já faziam reciclagem!", cobre:["humus","sustentavel"], chave:"humus"}
+];
+
+const ACERTOS=["Isso aí! 🎉","Mandou bem! 🌟","Acertou em cheio! 🎯","Muito bem! 👏","Arrasou! 💪","Perfeito! ✨"];
+const ERROS=["Quase! Vamos ver juntos 💛","Tudo bem, errar faz parte! 🌱","Boa tentativa! Olha só 👀"];
+
+let ordem=[],i=0,pontos=0,erradas=[],travado=false;
+const $=id=>document.getElementById(id);
+function emb(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]];}return a;}
+
+function iniciar(){
+  ordem=emb(PERGUNTAS.map((_,k)=>k));i=0;pontos=0;erradas=[];
+  $('start').classList.add('hidden');$('end').classList.add('hidden');$('rev').classList.add('hidden');
+  $('game').classList.remove('hidden');mostrar();
+}
+function mostrar(){
+  travado=false;
+  const q=PERGUNTAS[ordem[i]];
+  $('cnt').textContent=`Pergunta ${i+1} de ${PERGUNTAS.length}`;
+  $('pts').textContent=`⭐ ${pontos}`;
+  $('prog').style.width=(i/PERGUNTAS.length*100)+'%';
+  $('qt').textContent=q.p;
+  const box=$('opts');box.innerHTML='';
+  emb(q.o.map((t,k)=>({t,certa:k===0}))).forEach(a=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=a.t;b.dataset.certa=a.certa?'1':'0';
+    b.onclick=()=>responder(b,q);box.appendChild(b);
+  });
+  $('fb').className='fb';$('fb').textContent='';
+  $('bNext').classList.add('hidden');
+}
+function responder(b,q){
+  if(travado)return;travado=true;
+  const certo=b.dataset.certa==='1';
+  document.querySelectorAll('.opt').forEach(o=>{o.disabled=true;if(o.dataset.certa==='1')o.classList.add('ok');});
+  if(certo){pontos++;$('fb').className='fb ok';$('fb').textContent=ACERTOS[Math.floor(Math.random()*ACERTOS.length)]+' '+q.e;}
+  else{b.classList.add('bad');erradas.push(q);$('fb').className='fb bad';$('fb').textContent=ERROS[Math.floor(Math.random()*ERROS.length)]+' A resposta certa é: '+q.o[0]+'. '+q.e;}
+  $('pts').textContent=`⭐ ${pontos}`;
+  $('bNext').textContent=(i===PERGUNTAS.length-1)?'Ver resultado 🏆':'Próxima ➜';
+  $('bNext').classList.remove('hidden');
+}
+function proxima(){i++;if(i<PERGUNTAS.length)mostrar();else fim();}
+function fim(){
+  $('game').classList.add('hidden');$('end').classList.remove('hidden');
+  $('prog').style.width='100%';
+  const pct=pontos/PERGUNTAS.length;
+  const est=pct>=0.85?3:pct>=0.6?2:1;
+  $('stars').textContent='⭐'.repeat(est)+'☆'.repeat(3-est);
+  $('score').textContent=`${pontos} de ${PERGUNTAS.length}`;
+  $('msg').textContent=est===3?'Parabéns, Martina! Você é uma grande historiadora! 🏅':est===2?'Muito bem, Martina! Falta pouquinho para as 3 estrelas! 💪':'Boa, Martina! Revise o resumo e tente de novo, você consegue! 🌈';
+  $('bReview').style.display=erradas.length?'block':'none';
+}
+function revisar(){
+  const r=$('rev');r.innerHTML='';
+  erradas.forEach(q=>{const d=document.createElement('div');d.className='item';
+    const t=document.createElement('b');t.textContent=q.p;const a=document.createElement('div');a.textContent='✅ '+q.o[0];const e=document.createElement('div');e.textContent='💡 '+q.e;
+    d.append(t,a,e);r.appendChild(d);});
+  r.classList.remove('hidden');
+}
+$('bStart').onclick=iniciar;$('bNext').onclick=proxima;$('bAgain').onclick=iniciar;$('bReview').onclick=revisar;
+</script>
+</body>
+</html>
