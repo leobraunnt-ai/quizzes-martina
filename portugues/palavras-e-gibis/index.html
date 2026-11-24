@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Missão Palavras e Gibis — Quiz de Português</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;font-size:18px;color:#2b2b3a;
+ background:linear-gradient(160deg,#f3e8ff 0%,#fff3d6 50%,#dff1ff 100%);min-height:100vh}
+.wrap{max-width:640px;margin:0 auto;padding:18px 16px 40px}
+.card{background:#fff;border-radius:24px;padding:22px 18px;box-shadow:0 6px 0 rgba(0,0,0,.08)}
+h1{font-size:34px;margin:8px 0 4px;color:#7c3aed;text-align:center;line-height:1.1}
+h2{font-size:28px;margin:6px 0 8px;color:#E67E22;text-align:center}
+.sub{text-align:center;font-weight:700;color:#555;margin:0 0 10px}
+.emo{font-size:64px;text-align:center;margin:6px 0}
+.lema{text-align:center;font-size:20px;font-weight:700;color:#E67E22;margin:8px 0 18px}
+.txt{text-align:center;margin:0 0 18px;line-height:1.4}
+.btn{display:block;width:100%;min-height:56px;border:none;border-radius:18px;font-size:20px;font-weight:800;cursor:pointer;padding:12px 16px;font-family:inherit}
+.go{background:#2E86DE;color:#fff;box-shadow:0 5px 0 #1b5fa8}
+.go:active{transform:translateY(3px);box-shadow:0 2px 0 #1b5fa8}
+.orange{background:#E67E22;color:#fff;box-shadow:0 5px 0 #b35f12}
+.sec{background:#fff;color:#7c3aed;border:3px solid #7c3aed;margin-top:12px}
+.top{display:flex;justify-content:space-between;align-items:center;font-weight:800;margin-bottom:8px;color:#555}
+.tag{display:none;background:#E67E22;color:#fff;border-radius:12px;padding:4px 10px;font-size:15px;font-weight:800;margin-bottom:8px}
+.repesca .tag{display:inline-block}
+.bar{height:14px;background:#eee;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.bar>div{height:100%;background:linear-gradient(90deg,#27AE60,#2E86DE);width:0;transition:width .3s}
+.repesca .bar>div{background:linear-gradient(90deg,#f2b705,#E67E22)}
+.q{font-size:21px;font-weight:800;margin:4px 0 16px;line-height:1.3}
+.opt{display:block;width:100%;text-align:left;min-height:56px;margin:0 0 12px;padding:12px 16px;border-radius:16px;border:3px solid #d9d4e8;background:#faf8ff;font-size:18px;font-family:inherit;cursor:pointer;color:#2b2b3a;line-height:1.3}
+.opt:disabled{cursor:default}
+.opt.ok{background:#e3f8ea;border-color:#27AE60;font-weight:800}
+.opt.bad{background:#fdeaea;border-color:#E74C3C}
+.fb{border-radius:16px;padding:12px 14px;margin:6px 0 14px;font-size:18px;line-height:1.35;display:none}
+.fb.ok{display:block;background:#e3f8ea;border:2px solid #27AE60}
+.fb.bad{display:block;background:#fff3e6;border:2px solid #E67E22}
+.hidden{display:none}
+.score{font-size:52px;text-align:center;font-weight:900;color:#2E86DE;margin:4px 0}
+.stars{font-size:52px;text-align:center;letter-spacing:6px}
+.msg{text-align:center;font-size:21px;font-weight:800;margin:10px 0 12px}
+.repok{text-align:center;font-size:18px;font-weight:800;color:#1e8e4f;background:#e3f8ea;border-radius:14px;padding:10px;margin:0 0 16px}
+.rev{margin-top:16px}
+.rev .item{border-left:6px solid #E67E22;background:#fff8f0;border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:17px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="start" class="card">
+  <div class="emo">✏️💥🎤</div>
+  <h1>Missão Palavras e Gibis</h1>
+  <p class="sub">Quiz de Português • 3º ano</p>
+  <p class="lema">Aprender é uma aventura! 🔎</p>
+  <p class="txt">CH, LH e NH, palavras primitivas e derivadas, quadrinhos, entrevista, passado e futuro. Mostre tudo o que você aprendeu! 📚</p>
+  <button class="btn go" id="bStart">Começar 🚀</button>
+</div>
+
+<div id="pausa" class="card hidden">
+  <div class="emo">🔁</div>
+  <h2>Hora da repescagem!</h2>
+  <p class="txt" id="pausaTxt"></p>
+  <button class="btn orange" id="bRep">Começar a repescagem 💪</button>
+</div>
+
+<div id="game" class="card">
+  <span class="tag" id="tag">🔁 Repescagem</span>
+  <div class="top"><span id="cnt">Pergunta 1 de 20</span><span id="pts">⭐ 0</span></div>
+  <div class="bar"><div id="prog"></div></div>
+  <div class="q" id="qt"></div>
+  <div id="opts"></div>
+  <div class="fb" id="fb"></div>
+  <button class="btn go hidden" id="bNext">Próxima ➜</button>
+</div>
+
+<div id="end" class="card hidden">
+  <div class="emo">🏆</div>
+  <div class="stars" id="stars"></div>
+  <div class="score" id="score"></div>
+  <div class="msg" id="msg"></div>
+  <div class="repok hidden" id="repok"></div>
+  <button class="btn go" id="bAgain">Jogar de novo 🔁</button>
+  <button class="btn sec" id="bReview">Revisar as que errei 📖</button>
+  <div class="rev hidden" id="rev"></div>
+</div>
+
+</div>
+<script>
+// Cada pergunta: a primeira alternativa (o[0]) é a correta; as alternativas são embaralhadas a cada vez que a pergunta aparece.
+const PERGUNTAS = [
+ {p:"No trecho do Pequeno Polegar, as palavras tinha, filho, chamava e tamanho têm a letra h. Quais são as sílabas com h dessas palavras?", o:["nha, lho, cha, nho","na, lo, ca, no","tin, fil, cham, tam","ha, ho, ha, ho"], e:"Ti-NHA, fi-LHO, CHA-mava e tama-NHO: as sílabas com h são nha, lho, cha e nho.", cobre:["silabas_h"], chave:"tamanho"},
+ {p:"As sílabas NHA, LHO, CHA e NHO são formadas por…", o:["Consoante + consoante + vogal","Consoante + vogal + consoante","Consoante + vogal + vogal","Vogal + consoante + vogal"], e:"N-H-A: duas consoantes e depois uma vogal. É consoante + consoante + vogal.", cobre:["ccv"], chave:"consoante + consoante + vogal"},
+ {p:"Nas sílabas que têm ch, lh e nh, essas duas letras correspondem a…", o:["Um único som","Dois sons diferentes","Três sons","Nenhum som"], e:"CH, LH e NH são duas letras, mas correspondem a um único som. Por isso são chamados de dígrafos.", cobre:["um_som"], chave:"um unico som"},
+ {p:"Acrescentando a letra h na palavra CAMA, que palavra nova formamos?", o:["Chama","Camha","Calma","Cana"], e:"Cama ➜ chama! Também: galo ➜ galho, bico ➜ bicho, tela ➜ telha, cão ➜ chão e sono ➜ sonho.", cobre:["acrescentar_h"], chave:"chama"},
+ {p:"Por que Mauricio de Sousa é chamado de “o pai da Turma da Mônica”?", o:["Porque ele é o criador das histórias em quadrinhos da Turma da Mônica","Porque ele é pai de uma mulher chamada Mônica","Porque ele é o pai do Cebolinha","Porque ele mora com a turma"], e:"Ele é chamado assim porque é o criador das histórias em quadrinhos da Turma da Mônica.", cobre:["pai_turma"], chave:"criador das historias em quadrinhos"},
+ {p:"Palavras derivadas são formadas a partir de outras. Quais palavras são derivadas de PORTA?", o:["Portaria, porteiro, porteira e portal","Porto Alegre, português e Portugal","Porta, Portugal e Porto Alegre","Português, portal e Portugal"], e:"Porta é primitiva (não deriva de outra). Portaria, porteiro, porteira e portal vêm de porta (repetem PORT). Porto Alegre, português e Portugal não são da família.", cobre:["familia_porta","def_prim_der"], chave:"porteira"},
+ {p:"Qual destas palavras NÃO é da família de CHUVA?", o:["Chuteira","Chuvisco","Chuvarada","Chuveiro"], e:"Chuva é a primitiva. Chuvisco, chuvarada e chuveiro são derivadas, como sal ➜ saleiro. Chuteira e chumaço só parecem, mas não são da família!", cobre:["familias_15","pares_14"], chave:"chuteira"},
+ {p:"Quem é o personagem principal da história “O susto”? Onde descobrimos isso?", o:["Cascão — está no título","Cebolinha — está no título","Cebolinha — está no último quadrinho","Cascão — está na fala do primeiro quadrinho"], e:"O título é “Cascão em O susto”. Por isso sabemos que o Cascão é o personagem principal.", cobre:["hq_titulo_principal"], chave:"no titulo"},
+ {p:"Qual era o plano do Cascão? Como ficamos sabendo dele?", o:["Assustar o Cebolinha — pelos balões de pensamento","Brincar com o Cebolinha — pelas falas","Fugir da chuva — pelo título","Assustar o Cebolinha — por um narrador"], e:"O Cascão queria assustar o Cebolinha. Ficamos sabendo pelos balões de pensamento.", cobre:["hq_plano"], chave:"baloes de pensamento"},
+ {p:"Qual é a situação inusitada (a surpresa) que impede o plano do Cascão?", o:["Um trovão — CABRUUM — assusta o próprio Cascão","O Cebolinha estoura o saco e assusta o Cascão","O Cebolinha diz que vai chover logo","O Cascão percebe que não há graça em assustar o amigo"], e:"CABRUUM é o som de um trovão. O Cascão se assusta e foge sem concluir seu plano.", cobre:["hq_trovao","hq_esquema"], chave:"som de um trovao"},
+ {p:"Quantos quadrinhos formam a história “O susto”?", o:["11","10","12","8"], e:"A história “O susto” tem 11 quadrinhos.", cobre:["hq_11"], chave:"11 quadrinhos"},
+ {p:"Na história “O susto”, os personagens não têm falas. Quando nos comunicamos sem usar palavras, usamos a…", o:["Linguagem não verbal","Linguagem verbal","Linguagem escrita","Linguagem das cartas"], e:"Sem palavras, usamos a linguagem não verbal: expressões, balões de pensamento e sinais como ? e !.", cobre:["nao_verbal"], chave:"linguagem nao verbal"},
+ {p:"Como a entrevista com Mauricio de Sousa está organizada?", o:["1ª parte: introdução sobre o entrevistado. 2ª parte: perguntas do entrevistador e respostas do entrevistado","1ª parte: introdução sobre o Dia das Crianças. 2ª parte: só as respostas do entrevistado","Só perguntas, sem nenhuma introdução","Em quadrinhos com balões de pensamento"], e:"Primeiro vem uma introdução sobre o entrevistado. Depois, as perguntas (em negrito) e as respostas.", cobre:["organizacao"], chave:"introducao sobre o entrevistado"},
+ {p:"Quem entrevistou Mauricio de Sousa, e quando a entrevista foi publicada?", o:["Marcella Franco, em 12 de outubro de 2022 — Dia das Crianças","Tia Lenita, em 12 de outubro de 1963","Marcella Franco, em 25 de dezembro de 2022 — Natal","A Mônica, em 12 de outubro de 2023"], e:"A entrevistadora é Marcella Franco. A entrevista saiu em 12 de outubro de 2022, no Dia das Crianças.", cobre:["ent_pessoas","ent_data"], chave:"12 de outubro de 2022"},
+ {p:"O que é a Folhinha?", o:["Um pedaço do jornal feito especialmente para crianças, criado em 1963","Uma revista de gibis criada em 2022","O cachorrinho que Mauricio tinha quando era criança","A editora que lançou as histórias do Horácio"], e:"A Folhinha é o jornal infantil da Folha de S. Paulo. Mauricio ajudou a criá-la em 1963, com a Tia Lenita.", cobre:["folhinha_1963","folhinha"], chave:"pedaco do jornal"},
+ {p:"Em quem Mauricio se inspirou para criar o Bidu? Por que escolheu esse nome?", o:["No Cuica, seu cachorrinho de infância; Bidu era nome para pessoas inteligentes","No Franjinha; Bidu era nome de cachorro bravo","No Horácio; Bidu era o nome do pai dele","Num cachorro da Tia Lenita; ele não gostava do nome Cuica"], e:"O Bidu foi inspirado no Cuica. Naquele tempo, Bidu era usado para pessoas inteligentes.", cobre:["bidu"], chave:"cuica"},
+ {p:"Mauricio disse que, fazendo várias vezes, o desenho vai se aprimorando. O que significa “aprimorando”?", o:["Melhorando, aperfeiçoando","Apagando","Estragando","Ficando mais torto"], e:"Aprimorando quer dizer melhorando, aperfeiçoando.", cobre:["aprimorando"], chave:"aperfeicoando"},
+ {p:"Qual destas frases está no FUTURO (ação que ainda vai acontecer)?", o:["Mauricio de Sousa ganhará um filme sobre sua vida","Quando criança eu tinha um cachorrinho","Logo criei um cachorrinho","Adorava brincar com ele"], e:"Ganhará = ainda vai acontecer (futuro). Tinha, criei e adorava = já aconteceu (passado).", cobre:["def_passado_futuro"], chave:"ganhara"},
+ {p:"Como fica a frase “As crianças brincaram na pracinha” no FUTURO?", o:["As crianças brincarão na pracinha","As crianças brincaram na pracinha","As crianças brincavam na pracinha","As crianças brincam na pracinha"], e:"Brincaram ➜ brincarão (futuro). Do mesmo jeito: tomei ➜ tomarei. E no passado: dormirão ➜ dormiram.", cobre:["reescrever"], chave:"brincarao"},
+ {p:"Em 2023, a notícia dizia: “Mônica dos gibis completa 60 anos”. Como seria o título se fosse publicado em 2025?", o:["Mônica dos gibis completou 60 anos","Mônica dos gibis completará 60 anos","Mônica dos gibis completa 70 anos","Mônica dos gibis completava 2025 anos"], e:"Em 2025 o aniversário já aconteceu: completou (passado). Em 2021 ou 2022 seria completará (futuro).", cobre:["manchete"], chave:"completou 60 anos"}
+];
+
+const ACERTOS=["Isso aí! 🎉","Mandou bem! 🌟","Acertou em cheio! 🎯","Muito bem! 👏","Arrasou! 💪","Perfeito! ✨"];
+const ERROS=["Quase! Vamos ver juntos 💛","Tudo bem, errar faz parte! 🌱","Boa tentativa! Olha só 👀"];
+const CORRIGIU=["Agora foi! Corrigiu! ✅","Isso! Aprendeu! 🎉","Mandou bem na repescagem! 🌟"];
+
+// fase "normal": as 20 perguntas uma vez. fase "repescagem": as que errou voltam
+// (alternativas embaralhadas de novo) até ela acertar todas.
+let fase="normal",ordem=[],i=0,pontos=0,erradas=[],fila=[],corrigidas=0,travado=false;
+const $=id=>document.getElementById(id);
+const sorteio=a=>a[Math.floor(Math.random()*a.length)];
+function emb(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]];}return a;}
+function tela(id){['start','pausa','game','end'].forEach(t=>$(t).classList.toggle('hidden',t!==id));}
+
+function iniciar(){
+  fase="normal";ordem=emb(PERGUNTAS.map((_,k)=>k));i=0;pontos=0;erradas=[];fila=[];corrigidas=0;
+  $('rev').classList.add('hidden');$('repok').classList.add('hidden');
+  $('game').classList.remove('repesca');tela('game');mostrar();
+}
+function atual(){return fase==="normal"?PERGUNTAS[ordem[i]]:PERGUNTAS[fila[0]];}
+function mostrar(){
+  travado=false;
+  const q=atual();
+  if(fase==="normal"){
+    $('cnt').textContent=`Pergunta ${i+1} de ${PERGUNTAS.length}`;
+    $('pts').textContent=`⭐ ${pontos}`;
+    $('prog').style.width=(i/PERGUNTAS.length*100)+'%';
+  }else{
+    $('cnt').textContent=`Faltam ${fila.length} para corrigir`;
+    $('pts').textContent=`✅ ${corrigidas} de ${erradas.length}`;
+    $('prog').style.width=(corrigidas/erradas.length*100)+'%';
+  }
+  $('qt').textContent=q.p;
+  const box=$('opts');box.innerHTML='';
+  emb(q.o.map((t,k)=>({t,certa:k===0}))).forEach(a=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=a.t;b.dataset.certa=a.certa?'1':'0';
+    b.onclick=()=>responder(b,q);box.appendChild(b);
+  });
+  $('fb').className='fb';$('fb').textContent='';
+  $('bNext').classList.add('hidden');
+}
+function responder(b,q){
+  if(travado)return;travado=true;
+  const certo=b.dataset.certa==='1';
+  document.querySelectorAll('.opt').forEach(o=>{o.disabled=true;if(o.dataset.certa==='1')o.classList.add('ok');});
+  if(fase==="normal"){
+    if(certo){pontos++;$('fb').className='fb ok';$('fb').textContent=sorteio(ACERTOS)+' '+q.e;}
+    else{b.classList.add('bad');erradas.push(ordem[i]);$('fb').className='fb bad';$('fb').textContent=sorteio(ERROS)+' A resposta certa é: '+q.o[0]+'. '+q.e;}
+    $('pts').textContent=`⭐ ${pontos}`;
+    $('bNext').textContent=(i===PERGUNTAS.length-1)?(erradas.length?'Ir para a repescagem 🔁':'Ver resultado 🏆'):'Próxima ➜';
+  }else{
+    const k=fila.shift();
+    if(certo){corrigidas++;$('fb').className='fb ok';$('fb').textContent=sorteio(CORRIGIU)+' '+q.e;}
+    else{b.classList.add('bad');fila.push(k);$('fb').className='fb bad';$('fb').textContent=sorteio(ERROS)+' A resposta certa é: '+q.o[0]+'. '+q.e+' Essa pergunta volta no fim da repescagem. 🔁';}
+    $('pts').textContent=`✅ ${corrigidas} de ${erradas.length}`;
+    $('prog').style.width=(corrigidas/erradas.length*100)+'%';
+    $('bNext').textContent=fila.length?'Próxima ➜':'Ver resultado 🏆';
+  }
+  $('bNext').classList.remove('hidden');
+}
+function proxima(){
+  if(fase==="normal"){
+    i++;
+    if(i<PERGUNTAS.length)mostrar();
+    else if(erradas.length){
+      const n=erradas.length;
+      $('pausaTxt').textContent=`Você acertou ${pontos} de ${PERGUNTAS.length}! Agora vai responder de novo ${n===1?'a pergunta que errou':'as '+n+' perguntas que errou'}, corrigindo. Cada pergunta só sai da repescagem quando você acertar! 💛`;
+      tela('pausa');
+    }else fim();
+  }else{
+    if(fila.length)mostrar();else fim();
+  }
+}
+function comecarRepescagem(){
+  fase="repescagem";fila=emb(erradas);corrigidas=0;
+  $('game').classList.add('repesca');tela('game');mostrar();
+}
+function fim(){
+  tela('end');
+  $('prog').style.width='100%';
+  const pct=pontos/PERGUNTAS.length;
+  const est=pct>=0.85?3:pct>=0.6?2:1;
+  $('stars').textContent='⭐'.repeat(est)+'☆'.repeat(3-est);
+  $('score').textContent=`${pontos} de ${PERGUNTAS.length}`;
+  $('msg').textContent=est===3?'Parabéns, Martina! Você é uma craque das palavras! 🏅':est===2?'Muito bem, Martina! Falta pouquinho para as 3 estrelas! 💪':'Boa, Martina! Revise o resumo e tente de novo, você consegue! 🌈';
+  if(erradas.length){$('repok').textContent=`✅ Repescagem concluída: você corrigiu ${erradas.length===1?'a pergunta que tinha errado':'as '+erradas.length+' perguntas que tinha errado'}!`;$('repok').classList.remove('hidden');}
+  $('bReview').style.display=erradas.length?'block':'none';
+}
+function revisar(){
+  const r=$('rev');r.innerHTML='';
+  erradas.forEach(k=>{const q=PERGUNTAS[k];const d=document.createElement('div');d.className='item';
+    const t=document.createElement('b');t.textContent=q.p;const a=document.createElement('div');a.textContent='✅ '+q.o[0];const e=document.createElement('div');e.textContent='💡 '+q.e;
+    d.append(t,a,e);r.appendChild(d);});
+  r.classList.remove('hidden');
+}
+tela('start');
+$('bStart').onclick=iniciar;$('bNext').onclick=proxima;$('bAgain').onclick=iniciar;$('bReview').onclick=revisar;$('bRep').onclick=comecarRepescagem;
+</script>
+</body>
+</html>
