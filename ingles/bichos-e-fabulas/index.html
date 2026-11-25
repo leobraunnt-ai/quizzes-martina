@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Missão Bichos e Fábulas — Quiz de Inglês</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;font-size:18px;color:#2b2b3a;
+ background:linear-gradient(160deg,#f3e8ff 0%,#fff3d6 50%,#dff1ff 100%);min-height:100vh}
+.wrap{max-width:640px;margin:0 auto;padding:18px 16px 40px}
+.card{background:#fff;border-radius:24px;padding:22px 18px;box-shadow:0 6px 0 rgba(0,0,0,.08)}
+h1{font-size:34px;margin:8px 0 4px;color:#7c3aed;text-align:center;line-height:1.1}
+h2{font-size:28px;margin:6px 0 8px;color:#E67E22;text-align:center}
+.sub{text-align:center;font-weight:700;color:#555;margin:0 0 10px}
+.emo{font-size:64px;text-align:center;margin:6px 0}
+.lema{text-align:center;font-size:20px;font-weight:700;color:#E67E22;margin:8px 0 18px}
+.txt{text-align:center;margin:0 0 18px;line-height:1.4}
+.btn{display:block;width:100%;min-height:56px;border:none;border-radius:18px;font-size:20px;font-weight:800;cursor:pointer;padding:12px 16px;font-family:inherit}
+.go{background:#2E86DE;color:#fff;box-shadow:0 5px 0 #1b5fa8}
+.go:active{transform:translateY(3px);box-shadow:0 2px 0 #1b5fa8}
+.orange{background:#E67E22;color:#fff;box-shadow:0 5px 0 #b35f12}
+.sec{background:#fff;color:#7c3aed;border:3px solid #7c3aed;margin-top:12px}
+.top{display:flex;justify-content:space-between;align-items:center;font-weight:800;margin-bottom:8px;color:#555}
+.tag{display:none;background:#E67E22;color:#fff;border-radius:12px;padding:4px 10px;font-size:15px;font-weight:800;margin-bottom:8px}
+.repesca .tag{display:inline-block}
+.bar{height:14px;background:#eee;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.bar>div{height:100%;background:linear-gradient(90deg,#27AE60,#2E86DE);width:0;transition:width .3s}
+.repesca .bar>div{background:linear-gradient(90deg,#f2b705,#E67E22)}
+.q{font-size:21px;font-weight:800;margin:4px 0 16px;line-height:1.3}
+.opt{display:block;width:100%;text-align:left;min-height:56px;margin:0 0 12px;padding:12px 16px;border-radius:16px;border:3px solid #d9d4e8;background:#faf8ff;font-size:18px;font-family:inherit;cursor:pointer;color:#2b2b3a;line-height:1.3}
+.opt:disabled{cursor:default}
+.opt.ok{background:#e3f8ea;border-color:#27AE60;font-weight:800}
+.opt.bad{background:#fdeaea;border-color:#E74C3C}
+.fb{border-radius:16px;padding:12px 14px;margin:6px 0 14px;font-size:18px;line-height:1.35;display:none}
+.fb.ok{display:block;background:#e3f8ea;border:2px solid #27AE60}
+.fb.bad{display:block;background:#fff3e6;border:2px solid #E67E22}
+.hidden{display:none}
+.score{font-size:52px;text-align:center;font-weight:900;color:#2E86DE;margin:4px 0}
+.stars{font-size:52px;text-align:center;letter-spacing:6px}
+.msg{text-align:center;font-size:21px;font-weight:800;margin:10px 0 12px}
+.repok{text-align:center;font-size:18px;font-weight:800;color:#1e8e4f;background:#e3f8ea;border-radius:14px;padding:10px;margin:0 0 16px}
+.rev{margin-top:16px}
+.rev .item{border-left:6px solid #E67E22;background:#fff8f0;border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:17px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="start" class="card">
+  <div class="emo">🦁📖🐭</div>
+  <h1>Missão Bichos e Fábulas</h1>
+  <p class="sub">Quiz de Inglês • 3º ano</p>
+  <p class="lema">Aprender é uma aventura! 🔎</p>
+  <p class="txt">Animal classes, habitats, predator and prey, fables and morals e a história da fazenda. Let's go! Mostre tudo o que você aprendeu! 📚</p>
+  <button class="btn go" id="bStart">Começar 🚀</button>
+</div>
+
+<div id="pausa" class="card hidden">
+  <div class="emo">🔁</div>
+  <h2>Hora da repescagem!</h2>
+  <p class="txt" id="pausaTxt"></p>
+  <button class="btn orange" id="bRep">Começar a repescagem 💪</button>
+</div>
+
+<div id="game" class="card">
+  <span class="tag" id="tag">🔁 Repescagem</span>
+  <div class="top"><span id="cnt">Pergunta 1 de 20</span><span id="pts">⭐ 0</span></div>
+  <div class="bar"><div id="prog"></div></div>
+  <div class="q" id="qt"></div>
+  <div id="opts"></div>
+  <div class="fb" id="fb"></div>
+  <button class="btn go hidden" id="bNext">Próxima ➜</button>
+</div>
+
+<div id="end" class="card hidden">
+  <div class="emo">🏆</div>
+  <div class="stars" id="stars"></div>
+  <div class="score" id="score"></div>
+  <div class="msg" id="msg"></div>
+  <div class="repok hidden" id="repok"></div>
+  <button class="btn go" id="bAgain">Jogar de novo 🔁</button>
+  <button class="btn sec" id="bReview">Revisar as que errei 📖</button>
+  <div class="rev hidden" id="rev"></div>
+</div>
+
+</div>
+<script>
+// Cada pergunta: a primeira alternativa (o[0]) é a correta; as alternativas são embaralhadas a cada vez que a pergunta aparece.
+const PERGUNTAS = [
+ {p:"Complete a frase sobre os MAMMALS (mamíferos): “Mammals have got ___ on their bodies and produce ___ to feed their babies.”", o:["hair … milk","feathers … milk","scales … water","fins … plants"], e:"Mammals have got hair (pelos) and produce milk (leite) to feed their babies (filhotes).", cobre:["mammals","hair or fur","produce milk to feed their babies"], chave:"produce milk to feed their babies"},
+ {p:"Quantas espécies de mammals existem, e quantas estão em perigo de extinção?", o:["More than 4,000 species — around 1,500 in danger of extinction","More than 1,500 species — around 4,000 in danger of extinction","More than 400 species — around 150 in danger of extinction","More than 4,000 species — none in danger of extinction"], e:"There are more than 4,000 species of mammals, and around 1,500 are in danger of extinction.", cobre:["4,000","1,500","danger of extinction"], chave:"1,500"},
+ {p:"Complete: “Birds are the only animals that have ___. A bird's wings have the same bones as a human ___.”", o:["feathers … arm","fins … leg","scales … arm","hair … head"], e:"Só as aves têm penas (feathers). E as asas da ave têm os mesmos ossos do braço humano (human arm).", cobre:["birds","feathers","the only animals that have feathers","same bones as a human arm"], chave:"same bones as a human arm"},
+ {p:"Complete: “Fish live in the water. They have got…”", o:["fins, gills and scales","feathers, wings and a beak","hair and milk","fins, feathers and fur"], e:"Fish have got fins (nadadeiras), gills (brânquias) and scales (escamas).", cobre:["fish","fins, gills and scales","scales"], chave:"fins, gills and scales"},
+ {p:"O lizard (lagarto) é um REPTILE. All reptiles have got scales. Onde NÃO encontramos reptiles?", o:["In the polar regions","In the forest","In the desert","In the grasslands"], e:"You can find reptiles in all habitats, except in the polar regions (regiões polares).", cobre:["reptiles","lizard","All reptiles have got scales","except in the polar regions"], chave:"except in the polar regions"},
+ {p:"O frog (sapo/rã) é um AMPHIBIAN. Isso quer dizer que ele…", o:["lives part of its life in the water and part on land","lives only in the ocean","has got feathers and a beak","produces milk to feed its babies"], e:"Amphibians live part of their lives in the water and part on land (terra).", cobre:["amphibians","frog","part of their lives in the water and part on land"], chave:"part on land"},
+ {p:"O que significam BEAK, FINS, WINGS e SCALES?", o:["beak = bico · fins = nadadeiras · wings = asas · scales = escamas","beak = asa · fins = penas · wings = bico · scales = pelo","beak = bico · fins = escamas · wings = penas · scales = nadadeiras","beak = pelo · fins = nadadeiras · wings = brânquias · scales = asas"], e:"Beak = bico, fins = nadadeiras, wings = asas, scales = escamas. Birds têm beak e wings; fish têm fins e scales.", cobre:["beak","fins","wings","scales"], chave:"nadadeiras"},
+ {p:"A: “Where do monkeys live?” B: “They live in the ___.” E o penguin e o polar bear vivem na ___.", o:["forest … polar region","desert … ocean","ocean … forest","polar region … grasslands"], e:"They live in the forest (floresta). Penguin e polar bear vivem na polar region (região polar).", cobre:["monkey","forest","Where do monkeys live?","They live in the forest","penguin","polar bear","polar region"], chave:"they live in the forest"},
+ {p:"Ligue cada animal à sua classe:", o:["parrot ➜ birds · monkey ➜ mammals · frog ➜ amphibians · lizard ➜ reptiles","parrot ➜ mammals · monkey ➜ birds · frog ➜ reptiles · lizard ➜ amphibians","parrot ➜ birds · monkey ➜ mammals · frog ➜ reptiles · lizard ➜ amphibians","parrot ➜ fish · monkey ➜ mammals · frog ➜ amphibians · lizard ➜ birds"], e:"Parrot (papagaio) é bird, monkey (macaco) é mammal, frog (sapo/rã) é amphibian e lizard (lagarto) é reptile.", cobre:["mammals","birds","amphibians","reptiles","parrot","lizard","frog"], chave:"lizard"},
+ {p:"Qual opção liga TUDO certo, animal ➜ habitat?", o:["camel ➜ desert · lion ➜ grasslands · dolphin ➜ ocean","camel ➜ ocean · lion ➜ desert · dolphin ➜ grasslands","camel ➜ grasslands · lion ➜ ocean · dolphin ➜ desert","camel ➜ desert · lion ➜ ocean · dolphin ➜ grasslands"], e:"Camel (camelo) no desert, lion (leão) nos grasslands e dolphin (golfinho) no ocean.", cobre:["camel","desert","grasslands","ocean"], chave:"grasslands"},
+ {p:"Who am I? “I have got feathers and a ___, and I haven't got fins. I can't ___ or jump, but I can ___.” I am a parrot!", o:["beak … swim … fly","fins … fly … swim","wing … fly … swim","beak … fly … jump"], e:"O parrot tem penas e bico (beak), não tem nadadeiras. Ele não consegue nadar (swim), mas consegue voar (fly).", cobre:["I have got feathers and a beak","I haven't got fins","I can't swim or jump","I can fly","I am a parrot","parrot"], chave:"i can fly"},
+ {p:"Qual frase está CERTA?", o:["Predator hunts and eats other organisms. Prey is hunted and eaten by other organisms.","Prey hunts and eats other organisms. Predator is hunted and eaten by other organisms.","Predator and prey are the same thing.","Predator lives in the water. Prey lives on land."], e:"Predator (predador) caça e come. Prey (presa) é caçada e comida.", cobre:["predator","prey","hunts and eats other organisms","hunted and eaten by other organisms"], chave:"hunted and eaten by other organisms"},
+ {p:"O toad (sapo) é um predator. Qual é a prey (presa) dele?", o:["insects","snakes","lions","elephants"], e:"Toad ➜ insects (insetos). A snake ➜ rats, mouse, birds. O bird ➜ insects, worms.", cobre:["toad","insects","snake"], chave:"insects"},
+ {p:"Olhando as fotos do livro, qual frase está CERTA?", o:["The mouse is coming out of its hole.","The cat is the prey.","This is a fox. (foto do galo)","The teacher is singing."], e:"O rato está saindo do buraco: certo! O gato é o predator, a foto é de um rooster (galo) e a professora está reading (lendo).", cobre:["coming out of its hole","The cat is the prey"], chave:"coming out of its hole"},
+ {p:"Ligue a fábula com a sua moral:", o:["The Hare and the Tortoise ➜ Never give up · The Lion and the Mouse ➜ One good action deserves another · The Ant and the Grasshopper ➜ Be prepared for difficult days","The Hare and the Tortoise ➜ Be prepared for difficult days · The Lion and the Mouse ➜ Never give up · The Ant and the Grasshopper ➜ One good action deserves another","The Hare and the Tortoise ➜ One good action deserves another · The Lion and the Mouse ➜ Be prepared for difficult days · The Ant and the Grasshopper ➜ Never give up","The Hare and the Tortoise ➜ Never give up · The Lion and the Mouse ➜ Be prepared for difficult days · The Ant and the Grasshopper ➜ One good action deserves another"], e:"Lebre e Tartaruga: nunca desista. Leão e Rato: uma boa ação merece outra. Formiga e Gafanhoto: esteja preparado para os dias difíceis.", cobre:["One good action deserves another","Never give up","Be prepared for difficult days","The Hare and the Tortoise","The Lion and the Mouse","The Ant and the Grasshopper"], chave:"one good action deserves another"},
+ {p:"Na fábula dos ratos e do gato, qual é a ordem certa? FIRST ➜ THEN ➜ LAST", o:["Meeting about the enemy (the cat) ➜ the young mouse has a solution ➜ the old mouse says they have a new problem","The young mouse has a solution ➜ meeting about the cat ➜ the old mouse says they have a new problem","The old mouse says they have a new problem ➜ meeting about the cat ➜ the young mouse has a solution","Meeting about the cat ➜ the old mouse says they have a new problem ➜ the young mouse has a solution"], e:"First: a reunião sobre o inimigo, o gato. Then: o rato jovem tem uma solução. Last: o rato velho diz que agora há um novo problema.", cobre:["meeting","enemy","solution","new problem","first","then","last"], chave:"new problem"},
+ {p:"Look at the farm: “How many chickens are there? How many roosters are there?”", o:["There are 5 chickens and 2 roosters.","There are 2 chickens and 5 roosters.","There are 5 chickens and 5 roosters.","There are 6 chickens and 1 rooster."], e:"There are 5 chickens (galinhas) and 2 roosters (galos).", cobre:["There are 5 chickens","There are 2 roosters","rooster"], chave:"there are 2 roosters"},
+ {p:"“Where is the farmer now?” e “Where is the mouse?”", o:["He is in front of the chicken house. / It is behind the stone.","He is behind the chicken house. / It is in front of the stone.","He is in the ocean. / It is in the forest.","He is behind the stone. / It is in front of the chicken house."], e:"In front of = na frente de (o fazendeiro, do galinheiro). Behind = atrás de (o rato, da pedra).", cobre:["in front of","chicken house","behind the stone"], chave:"in front of the chicken house"},
+ {p:"“What is the girl doing?” e “What is the boy holding?”", o:["She is taking photos. / He's holding a cat.","She is holding a cat. / He's taking photos.","She is singing. / He's holding a bell.","She is feeding the chickens. / He's holding a rooster."], e:"A menina está tirando fotos (taking photos). O menino está segurando um gato (holding a cat).", cobre:["taking photos","holding a cat"], chave:"holding a cat"},
+ {p:"Na história do young mouse (rato jovem), quem são os characters e qual é a moral?", o:["The young mouse, the cat and the rooster — Don't judge a book by its cover!","The young mouse, the cat and the rooster — Early birds eat the worm!","The lion, the mouse and the farmer — Easier said than done!","The ant and the grasshopper — Don't judge a book by its cover!"], e:"Characters: young mouse, cat and rooster. Moral: Don't judge a book by its cover! (não julgue pela aparência).", cobre:["young mouse","characters","Don't judge a book by its cover"], chave:"don't judge a book by its cover"}
+];
+
+const ACERTOS=["Isso aí! 🎉","Mandou bem! 🌟","Acertou em cheio! 🎯","Muito bem! 👏","Arrasou! 💪","Perfeito! ✨"];
+const ERROS=["Quase! Vamos ver juntos 💛","Tudo bem, errar faz parte! 🌱","Boa tentativa! Olha só 👀"];
+const CORRIGIU=["Agora foi! Corrigiu! ✅","Isso! Aprendeu! 🎉","Mandou bem na repescagem! 🌟"];
+
+// fase "normal": as 20 perguntas uma vez. fase "repescagem": as que errou voltam
+// (alternativas embaralhadas de novo) até ela acertar todas.
+let fase="normal",ordem=[],i=0,pontos=0,erradas=[],fila=[],corrigidas=0,travado=false;
+const $=id=>document.getElementById(id);
+const sorteio=a=>a[Math.floor(Math.random()*a.length)];
+function emb(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]];}return a;}
+function tela(id){['start','pausa','game','end'].forEach(t=>$(t).classList.toggle('hidden',t!==id));}
+
+function iniciar(){
+  fase="normal";ordem=emb(PERGUNTAS.map((_,k)=>k));i=0;pontos=0;erradas=[];fila=[];corrigidas=0;
+  $('rev').classList.add('hidden');$('repok').classList.add('hidden');
+  $('game').classList.remove('repesca');tela('game');mostrar();
+}
+function atual(){return fase==="normal"?PERGUNTAS[ordem[i]]:PERGUNTAS[fila[0]];}
+function mostrar(){
+  travado=false;
+  const q=atual();
+  if(fase==="normal"){
+    $('cnt').textContent=`Pergunta ${i+1} de ${PERGUNTAS.length}`;
+    $('pts').textContent=`⭐ ${pontos}`;
+    $('prog').style.width=(i/PERGUNTAS.length*100)+'%';
+  }else{
+    $('cnt').textContent=`Faltam ${fila.length} para corrigir`;
+    $('pts').textContent=`✅ ${corrigidas} de ${erradas.length}`;
+    $('prog').style.width=(corrigidas/erradas.length*100)+'%';
+  }
+  $('qt').textContent=q.p;
+  const box=$('opts');box.innerHTML='';
+  emb(q.o.map((t,k)=>({t,certa:k===0}))).forEach(a=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=a.t;b.dataset.certa=a.certa?'1':'0';
+    b.onclick=()=>responder(b,q);box.appendChild(b);
+  });
+  $('fb').className='fb';$('fb').textContent='';
+  $('bNext').classList.add('hidden');
+}
+function responder(b,q){
+  if(travado)return;travado=true;
+  const certo=b.dataset.certa==='1';
+  document.querySelectorAll('.opt').forEach(o=>{o.disabled=true;if(o.dataset.certa==='1')o.classList.add('ok');});
+  if(fase==="normal"){
+    if(certo){pontos++;$('fb').className='fb ok';$('fb').textContent=sorteio(ACERTOS)+' '+q.e;}
+    else{b.classList.add('bad');erradas.push(ordem[i]);$('fb').className='fb bad';$('fb').textContent=sorteio(ERROS)+' A resposta certa é: '+q.o[0]+'. '+q.e;}
+    $('pts').textContent=`⭐ ${pontos}`;
+    $('bNext').textContent=(i===PERGUNTAS.length-1)?(erradas.length?'Ir para a repescagem 🔁':'Ver resultado 🏆'):'Próxima ➜';
+  }else{
+    const k=fila.shift();
+    if(certo){corrigidas++;$('fb').className='fb ok';$('fb').textContent=sorteio(CORRIGIU)+' '+q.e;}
+    else{b.classList.add('bad');fila.push(k);$('fb').className='fb bad';$('fb').textContent=sorteio(ERROS)+' A resposta certa é: '+q.o[0]+'. '+q.e+' Essa pergunta volta no fim da repescagem. 🔁';}
+    $('pts').textContent=`✅ ${corrigidas} de ${erradas.length}`;
+    $('prog').style.width=(corrigidas/erradas.length*100)+'%';
+    $('bNext').textContent=fila.length?'Próxima ➜':'Ver resultado 🏆';
+  }
+  $('bNext').classList.remove('hidden');
+}
+function proxima(){
+  if(fase==="normal"){
+    i++;
+    if(i<PERGUNTAS.length)mostrar();
+    else if(erradas.length){
+      const n=erradas.length;
+      $('pausaTxt').textContent=`Você acertou ${pontos} de ${PERGUNTAS.length}! Agora vai responder de novo ${n===1?'a pergunta que errou':'as '+n+' perguntas que errou'}, corrigindo. Cada pergunta só sai da repescagem quando você acertar! 💛`;
+      tela('pausa');
+    }else fim();
+  }else{
+    if(fila.length)mostrar();else fim();
+  }
+}
+function comecarRepescagem(){
+  fase="repescagem";fila=emb(erradas);corrigidas=0;
+  $('game').classList.add('repesca');tela('game');mostrar();
+}
+function fim(){
+  tela('end');
+  $('prog').style.width='100%';
+  const pct=pontos/PERGUNTAS.length;
+  const est=pct>=0.85?3:pct>=0.6?2:1;
+  $('stars').textContent='⭐'.repeat(est)+'☆'.repeat(3-est);
+  $('score').textContent=`${pontos} de ${PERGUNTAS.length}`;
+  $('msg').textContent=est===3?'Parabéns, Martina! You are a superstar! Você é craque no inglês! 🏅':est===2?'Muito bem, Martina! Falta pouquinho para as 3 estrelas! 💪':'Boa, Martina! Revise o resumo e tente de novo, você consegue! 🌈';
+  if(erradas.length){$('repok').textContent=`✅ Repescagem concluída: você corrigiu ${erradas.length===1?'a pergunta que tinha errado':'as '+erradas.length+' perguntas que tinha errado'}!`;$('repok').classList.remove('hidden');}
+  $('bReview').style.display=erradas.length?'block':'none';
+}
+function revisar(){
+  const r=$('rev');r.innerHTML='';
+  erradas.forEach(k=>{const q=PERGUNTAS[k];const d=document.createElement('div');d.className='item';
+    const t=document.createElement('b');t.textContent=q.p;const a=document.createElement('div');a.textContent='✅ '+q.o[0];const e=document.createElement('div');e.textContent='💡 '+q.e;
+    d.append(t,a,e);r.appendChild(d);});
+  r.classList.remove('hidden');
+}
+tela('start');
+$('bStart').onclick=iniciar;$('bNext').onclick=proxima;$('bAgain').onclick=iniciar;$('bReview').onclick=revisar;$('bRep').onclick=comecarRepescagem;
+</script>
+</body>
+</html>
