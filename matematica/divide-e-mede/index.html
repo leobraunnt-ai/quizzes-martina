@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Missão Divide e Mede — Quiz de Matemática</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;font-size:18px;color:#2b2b3a;
+ background:linear-gradient(160deg,#f3e8ff 0%,#fff3d6 50%,#dff1ff 100%);min-height:100vh}
+.wrap{max-width:640px;margin:0 auto;padding:18px 16px 40px}
+.card{background:#fff;border-radius:24px;padding:22px 18px;box-shadow:0 6px 0 rgba(0,0,0,.08)}
+h1{font-size:34px;margin:8px 0 4px;color:#7c3aed;text-align:center;line-height:1.1}
+h2{font-size:28px;margin:6px 0 8px;color:#E67E22;text-align:center}
+.sub{text-align:center;font-weight:700;color:#555;margin:0 0 10px}
+.emo{font-size:64px;text-align:center;margin:6px 0}
+.lema{text-align:center;font-size:20px;font-weight:700;color:#E67E22;margin:8px 0 18px}
+.txt{text-align:center;margin:0 0 18px;line-height:1.4}
+.btn{display:block;width:100%;min-height:56px;border:none;border-radius:18px;font-size:20px;font-weight:800;cursor:pointer;padding:12px 16px;font-family:inherit}
+.go{background:#2E86DE;color:#fff;box-shadow:0 5px 0 #1b5fa8}
+.go:active{transform:translateY(3px);box-shadow:0 2px 0 #1b5fa8}
+.orange{background:#E67E22;color:#fff;box-shadow:0 5px 0 #b35f12}
+.sec{background:#fff;color:#7c3aed;border:3px solid #7c3aed;margin-top:12px}
+.top{display:flex;justify-content:space-between;align-items:center;font-weight:800;margin-bottom:8px;color:#555}
+.tag{display:none;background:#E67E22;color:#fff;border-radius:12px;padding:4px 10px;font-size:15px;font-weight:800;margin-bottom:8px}
+.repesca .tag{display:inline-block}
+.bar{height:14px;background:#eee;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.bar>div{height:100%;background:linear-gradient(90deg,#27AE60,#2E86DE);width:0;transition:width .3s}
+.repesca .bar>div{background:linear-gradient(90deg,#f2b705,#E67E22)}
+.q{font-size:21px;font-weight:800;margin:4px 0 16px;line-height:1.3}
+.opt{display:block;width:100%;text-align:left;min-height:56px;margin:0 0 12px;padding:12px 16px;border-radius:16px;border:3px solid #d9d4e8;background:#faf8ff;font-size:18px;font-family:inherit;cursor:pointer;color:#2b2b3a;line-height:1.3}
+.opt:disabled{cursor:default}
+.opt.ok{background:#e3f8ea;border-color:#27AE60;font-weight:800}
+.opt.bad{background:#fdeaea;border-color:#E74C3C}
+.fb{border-radius:16px;padding:12px 14px;margin:6px 0 14px;font-size:18px;line-height:1.35;display:none}
+.fb.ok{display:block;background:#e3f8ea;border:2px solid #27AE60}
+.fb.bad{display:block;background:#fff3e6;border:2px solid #E67E22}
+.hidden{display:none}
+.score{font-size:52px;text-align:center;font-weight:900;color:#2E86DE;margin:4px 0}
+.stars{font-size:52px;text-align:center;letter-spacing:6px}
+.msg{text-align:center;font-size:21px;font-weight:800;margin:10px 0 12px}
+.repok{text-align:center;font-size:18px;font-weight:800;color:#1e8e4f;background:#e3f8ea;border-radius:14px;padding:10px;margin:0 0 16px}
+.rev{margin-top:16px}
+.rev .item{border-left:6px solid #E67E22;background:#fff8f0;border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:17px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="start" class="card">
+  <div class="emo">➗🧊📏</div>
+  <h1>Missão Divide e Mede</h1>
+  <p class="sub">Quiz de Matemática • 3º ano</p>
+  <p class="lema">Aprender é uma aventura! 🔎</p>
+  <p class="txt">Divisão, metade, terça e quarta parte, figuras espaciais e medidas. Mostre tudo o que você aprendeu! 📚</p>
+  <button class="btn go" id="bStart">Começar 🚀</button>
+</div>
+
+<div id="pausa" class="card hidden">
+  <div class="emo">🔁</div>
+  <h2>Hora da repescagem!</h2>
+  <p class="txt" id="pausaTxt"></p>
+  <button class="btn orange" id="bRep">Começar a repescagem 💪</button>
+</div>
+
+<div id="game" class="card">
+  <span class="tag" id="tag">🔁 Repescagem</span>
+  <div class="top"><span id="cnt">Pergunta 1 de 20</span><span id="pts">⭐ 0</span></div>
+  <div class="bar"><div id="prog"></div></div>
+  <div class="q" id="qt"></div>
+  <div id="opts"></div>
+  <div class="fb" id="fb"></div>
+  <button class="btn go hidden" id="bNext">Próxima ➜</button>
+</div>
+
+<div id="end" class="card hidden">
+  <div class="emo">🏆</div>
+  <div class="stars" id="stars"></div>
+  <div class="score" id="score"></div>
+  <div class="msg" id="msg"></div>
+  <div class="repok hidden" id="repok"></div>
+  <button class="btn go" id="bAgain">Jogar de novo 🔁</button>
+  <button class="btn sec" id="bReview">Revisar as que errei 📖</button>
+  <div class="rev hidden" id="rev"></div>
+</div>
+
+</div>
+<script>
+// Cada pergunta: a primeira alternativa (o[0]) é a correta; as alternativas são embaralhadas a cada vez que a pergunta aparece.
+const PERGUNTAS = [
+ {p:"A ideia de repartir uma quantidade em partes iguais está associada a qual operação?", o:["Divisão","Adição","Multiplicação","Subtração"], e:"Repartir uma quantidade em partes iguais é fazer uma divisão. O sinal da divisão é ÷.", cobre:["def_divisao"], chave:"repartir uma quantidade em partes iguais"},
+ {p:"Júlia dividiu 28 peças de montar igualmente entre 4 crianças, sem sobra. Quantas peças cada criança recebeu?", o:["7 peças","4 peças","8 peças","6 peças"], e:"28 ÷ 4 = 7. Cada criança ficou com 7 peças.", cobre:["pecas"], chave:"28 ÷ 4 = 7"},
+ {p:"Fabrício vai guardar 36 carrinhos em 4 prateleiras, com a mesma quantidade em cada uma. Quantos carrinhos vão em cada prateleira?", o:["9","8","6","4"], e:"36 ÷ 4 = 9. São 9 carrinhos em cada prateleira.", cobre:["carrinhos"], chave:"36 ÷ 4 = 9"},
+ {p:"A tira maior mede 18 cm e a menor mede 3 cm. Quantas tiras menores formam uma tira maior?", o:["6 tiras","3 tiras","9 tiras","5 tiras"], e:"Descobrir quantas vezes uma quantidade cabe em outra é fazer uma divisão: 18 ÷ 3 = 6.", cobre:["tiras","cabe_em_outra"], chave:"18 ÷ 3 = 6"},
+ {p:"Quando dividimos uma quantidade em três partes iguais, cada parte é a…", o:["Terça parte","Metade","Quarta parte","Décima parte"], e:"Três partes iguais: cada uma é a terça parte. Duas partes iguais: cada uma é a metade.", cobre:["metade_terca"], chave:"terca parte"},
+ {p:"Quando dividimos uma quantidade em dez partes iguais, cada parte é a…", o:["Décima parte","Quinta parte","Quarta parte","Terça parte"], e:"Dez partes iguais: décima parte. Quatro: quarta parte. Cinco: quinta parte.", cobre:["partes"], chave:"decima parte"},
+ {p:"Bruno fez 18 origamis e vai doar um terço deles. Quantos origamis ele vai doar?", o:["6","9","3","4"], e:"18 ÷ 3 = 6. Um terço de 18 origamis é igual a 6. É o dobro do que Bianca vai doar (3).", cobre:["origamis"], chave:"18 ÷ 3 = 6"},
+ {p:"Quantos quartos são necessários para completar uma metade do inteiro?", o:["Dois quartos","Um quarto","Três quartos","Quatro quartos"], e:"Dois quartos completam uma metade. Ex.: 7 + 7 = 14, que é a metade de 28.", cobre:["quartos_metade"], chave:"dois quartos"},
+ {p:"Para calcular a metade de 38, fazemos 10 ÷ 2, 10 ÷ 2, 10 ÷ 2 e 8 ÷ 2 e somamos. Qual é o resultado?", o:["19","18","14","24"], e:"38 = 10 + 10 + 10 + 8. Dividindo cada parte por 2: 5 + 5 + 5 + 4 = 19.", cobre:["metade_38"], chave:"5 + 5 + 5 + 4 = 19"},
+ {p:"Qual objeto serve para medir uma quantidade EXATA de líquido?", o:["Copo medidor","Xícara","Balança de pratos","Fita métrica"], e:"O copo medidor mede uma quantidade exata de líquido. A xícara mede uma quantidade aproximada.", cobre:["objetos"], chave:"quantidade exata"},
+ {p:"Quem criou o quebra-cabeça chamado cubo de Rubik (o cubo mágico)?", o:["Ernő Rubik","Felipe","Waldemar Niclevicz","Vicente"], e:"Ernő Rubik criou o cubo de Rubik. O desafio é deixar cada uma das 6 faces com uma só das 6 cores.", cobre:["rubik"], chave:"cubo de rubik"},
+ {p:"Felipe tirou uma foto do cubo olhando de cima. Como se chama essa vista?", o:["Vista de cima ou vista superior","Vista de frente","Vista de lado","Vista de baixo"], e:"A vista de cima também é chamada de vista superior.", cobre:["vista"], chave:"vista superior"},
+ {p:"A pirâmide de base triangular tem 4 faces triangulares e 4 vértices. Quantas arestas ela tem?", o:["6 arestas","4 arestas","3 arestas","8 arestas"], e:"Pirâmide de base triangular: 4 faces triangulares, 4 vértices e 6 arestas.", cobre:["piramide"], chave:"6 arestas"},
+ {p:"Qual frase está CERTA?", o:["Os prismas têm duas bases e as pirâmides têm uma base","Os prismas têm uma base e as pirâmides têm duas bases","Os prismas e as pirâmides têm duas bases","As pirâmides não têm base"], e:"Prismas têm duas bases. Pirâmides têm uma base.", cobre:["bases"], chave:"prismas tem duas bases"},
+ {p:"Sólidos geométricos que têm pelo menos uma parte arredondada são chamados de…", o:["Corpos redondos","Prismas","Pirâmides","Cubos"], e:"Têm pelo menos uma parte arredondada: são os corpos redondos, como o cilindro e o cone.", cobre:["corpos_redondos"], chave:"corpos redondos"},
+ {p:"Qual sólido tem uma parte arredondada e duas bases em forma de círculo?", o:["Cilindro","Cone","Cubo","Pirâmide"], e:"O cilindro tem duas bases em forma de círculo. O cone tem uma parte arredondada e só uma base.", cobre:["cilindro_cone"], chave:"duas bases em forma de circulo"},
+ {p:"1 quilômetro é igual a 1 000 metros. Quantos metros há em 5 quilômetros?", o:["5 000 metros","500 metros","1 005 metros","50 metros"], e:"Cada quilômetro tem 1 000 metros. Então 5 quilômetros são 5 000 metros.", cobre:["km"], chave:"5 000 metros"},
+ {p:"Qual é a montanha mais alta do quadro?", o:["Everest, com 8 848 m","K2, com 8 611 m","Aconcágua, com 6 961 m","Alpamayo, com 5 947 m"], e:"A mais alta é o Everest (8 848 m, no Nepal). A mais baixa é o Alpamayo (5 947 m, no Peru).", cobre:["montanhas"], chave:"8 848"},
+ {p:"Para medir a capacidade (quanto cabe de líquido), usamos o…", o:["Litro (L) e o mililitro (mL)","Quilograma (kg) e o grama (g)","Metro (m) e o centímetro (cm)","Hora (h) e o minuto (min)"], e:"Capacidade: litro e mililitro. Peso: kg, g, mg. Comprimento: km, m, cm, mm. Tempo: h, min, s.", cobre:["unidades"], chave:"litro (l) e mililitro (ml)"},
+ {p:"Nas receitas, como se chama a xícara MAIOR?", o:["Xícara de chá","Xícara de cafezinho","Colher de sopa","Colher de chá"], e:"A xícara maior é a xícara de chá e a menor é a de cafezinho. A colher maior é a de sopa e a menor é a de chá.", cobre:["xicaras"], chave:"xicara de cha"}
+];
+
+const ACERTOS=["Isso aí! 🎉","Mandou bem! 🌟","Acertou em cheio! 🎯","Muito bem! 👏","Arrasou! 💪","Perfeito! ✨"];
+const ERROS=["Quase! Vamos ver juntos 💛","Tudo bem, errar faz parte! 🌱","Boa tentativa! Olha só 👀"];
+const CORRIGIU=["Agora foi! Corrigiu! ✅","Isso! Aprendeu! 🎉","Mandou bem na repescagem! 🌟"];
+
+// fase "normal": as 20 perguntas uma vez. fase "repescagem": as que errou voltam
+// (alternativas embaralhadas de novo) até ela acertar todas.
+let fase="normal",ordem=[],i=0,pontos=0,erradas=[],fila=[],corrigidas=0,travado=false;
+const $=id=>document.getElementById(id);
+const sorteio=a=>a[Math.floor(Math.random()*a.length)];
+function emb(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]];}return a;}
+function tela(id){['start','pausa','game','end'].forEach(t=>$(t).classList.toggle('hidden',t!==id));}
+
+function iniciar(){
+  fase="normal";ordem=emb(PERGUNTAS.map((_,k)=>k));i=0;pontos=0;erradas=[];fila=[];corrigidas=0;
+  $('rev').classList.add('hidden');$('repok').classList.add('hidden');
+  $('game').classList.remove('repesca');tela('game');mostrar();
+}
+function atual(){return fase==="normal"?PERGUNTAS[ordem[i]]:PERGUNTAS[fila[0]];}
+function mostrar(){
+  travado=false;
+  const q=atual();
+  if(fase==="normal"){
+    $('cnt').textContent=`Pergunta ${i+1} de ${PERGUNTAS.length}`;
+    $('pts').textContent=`⭐ ${pontos}`;
+    $('prog').style.width=(i/PERGUNTAS.length*100)+'%';
+  }else{
+    $('cnt').textContent=`Faltam ${fila.length} para corrigir`;
+    $('pts').textContent=`✅ ${corrigidas} de ${erradas.length}`;
+    $('prog').style.width=(corrigidas/erradas.length*100)+'%';
+  }
+  $('qt').textContent=q.p;
+  const box=$('opts');box.innerHTML='';
+  emb(q.o.map((t,k)=>({t,certa:k===0}))).forEach(a=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=a.t;b.dataset.certa=a.certa?'1':'0';
+    b.onclick=()=>responder(b,q);box.appendChild(b);
+  });
+  $('fb').className='fb';$('fb').textContent='';
+  $('bNext').classList.add('hidden');
+}
+function responder(b,q){
+  if(travado)return;travado=true;
+  const certo=b.dataset.certa==='1';
+  document.querySelectorAll('.opt').forEach(o=>{o.disabled=true;if(o.dataset.certa==='1')o.classList.add('ok');});
+  if(fase==="normal"){
+    if(certo){pontos++;$('fb').className='fb ok';$('fb').textContent=sorteio(ACERTOS)+' '+q.e;}
+    else{b.classList.add('bad');erradas.push(ordem[i]);$('fb').className='fb bad';$('fb').textContent=sorteio(ERROS)+' A resposta certa é: '+q.o[0]+'. '+q.e;}
+    $('pts').textContent=`⭐ ${pontos}`;
+    $('bNext').textContent=(i===PERGUNTAS.length-1)?(erradas.length?'Ir para a repescagem 🔁':'Ver resultado 🏆'):'Próxima ➜';
+  }else{
+    const k=fila.shift();
+    if(certo){corrigidas++;$('fb').className='fb ok';$('fb').textContent=sorteio(CORRIGIU)+' '+q.e;}
+    else{b.classList.add('bad');fila.push(k);$('fb').className='fb bad';$('fb').textContent=sorteio(ERROS)+' A resposta certa é: '+q.o[0]+'. '+q.e+' Essa pergunta volta no fim da repescagem. 🔁';}
+    $('pts').textContent=`✅ ${corrigidas} de ${erradas.length}`;
+    $('prog').style.width=(corrigidas/erradas.length*100)+'%';
+    $('bNext').textContent=fila.length?'Próxima ➜':'Ver resultado 🏆';
+  }
+  $('bNext').classList.remove('hidden');
+}
+function proxima(){
+  if(fase==="normal"){
+    i++;
+    if(i<PERGUNTAS.length)mostrar();
+    else if(erradas.length){
+      const n=erradas.length;
+      $('pausaTxt').textContent=`Você acertou ${pontos} de ${PERGUNTAS.length}! Agora vai responder de novo ${n===1?'a pergunta que errou':'as '+n+' perguntas que errou'}, corrigindo. Cada pergunta só sai da repescagem quando você acertar! 💛`;
+      tela('pausa');
+    }else fim();
+  }else{
+    if(fila.length)mostrar();else fim();
+  }
+}
+function comecarRepescagem(){
+  fase="repescagem";fila=emb(erradas);corrigidas=0;
+  $('game').classList.add('repesca');tela('game');mostrar();
+}
+function fim(){
+  tela('end');
+  $('prog').style.width='100%';
+  const pct=pontos/PERGUNTAS.length;
+  const est=pct>=0.85?3:pct>=0.6?2:1;
+  $('stars').textContent='⭐'.repeat(est)+'☆'.repeat(3-est);
+  $('score').textContent=`${pontos} de ${PERGUNTAS.length}`;
+  $('msg').textContent=est===3?'Parabéns, Martina! Você é uma craque da Matemática! 🏅':est===2?'Muito bem, Martina! Falta pouquinho para as 3 estrelas! 💪':'Boa, Martina! Revise o resumo e tente de novo, você consegue! 🌈';
+  if(erradas.length){$('repok').textContent=`✅ Repescagem concluída: você corrigiu ${erradas.length===1?'a pergunta que tinha errado':'as '+erradas.length+' perguntas que tinha errado'}!`;$('repok').classList.remove('hidden');}
+  $('bReview').style.display=erradas.length?'block':'none';
+}
+function revisar(){
+  const r=$('rev');r.innerHTML='';
+  erradas.forEach(k=>{const q=PERGUNTAS[k];const d=document.createElement('div');d.className='item';
+    const t=document.createElement('b');t.textContent=q.p;const a=document.createElement('div');a.textContent='✅ '+q.o[0];const e=document.createElement('div');e.textContent='💡 '+q.e;
+    d.append(t,a,e);r.appendChild(d);});
+  r.classList.remove('hidden');
+}
+tela('start');
+$('bStart').onclick=iniciar;$('bNext').onclick=proxima;$('bAgain').onclick=iniciar;$('bReview').onclick=revisar;$('bRep').onclick=comecarRepescagem;
+</script>
+</body>
+</html>
